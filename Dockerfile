@@ -21,7 +21,6 @@ RUN localedef -c -i en_US -f UTF-8 C.UTF-8 \
 
 
 # 开启php扩展安装
-mod_dav_svn mod_ldap mod_php subversion subversion-tools
 RUN apt-get update && apt-get install -y \
     cyrus-sasl \
     cyrus-sasl-lib \
