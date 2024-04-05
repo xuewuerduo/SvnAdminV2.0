@@ -39,13 +39,12 @@ RUN ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime \
 
 
 # 开启php扩展安装
-RUN apt-get update && apt-get install -y \
+RUN apt update && apt install -y \
     cyrus-sasl \
     cyrus-sasl-lib \
     cyrus-sasl-plain \
     subversion \
-    subversion-tools \
-    && apt clean all
+    subversion-tools
 
 #安装并启用PHP扩展
 RUN docker-php-ext-configure php-common && \
