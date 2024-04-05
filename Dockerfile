@@ -37,12 +37,12 @@ RUN ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime \
 # RUN apt install -y cyrus-sasl cyrus-sasl-lib cyrus-sasl-plain
 # RUN apt install -y which cronie at
 # RUN apt clean all
-RUN apt-get -y install subversion \
-    && apt-get install -y mod_dav_svn \
-    && apt-get install -y mod_ldap \
-    && apt-get install -y mod_php \
-    && apt-get install -y subversion \
-    && apt-get install -y subversion-tools
+RUN apt-get -y install subversion
+RUN apt-get install -y mod_dav_svn
+RUN apt-get install -y mod_ldap
+RUN apt-get install -y mod_php
+RUN apt-get install -y subversion
+RUN apt-get install -y subversion-tools
 
 RUN pecl install libapache2-mod-php8.2 \
 	&& pecl install php-common php-cli php-fpm php-json php-mysqlnd php-pdo php-process php-json php-gd php-bcmath php-ldap php-mbstring \
