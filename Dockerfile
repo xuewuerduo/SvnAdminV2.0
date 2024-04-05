@@ -2,7 +2,7 @@
 # Docker镜像打包
 
 #克隆仓库
-RUN git clone https://github.com/xuewuerduo//tmp/svnadmin2.git /tmp/svnadmin2
+RUN git clone https://github.com/xuewuerduo/SvnAdminV2.0.git /tmp/svnadmin2
 
 
 #ARG THIS_ARCH=arm64
