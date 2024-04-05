@@ -1,4 +1,4 @@
-FROM centos:centos7.9.2009
+FROM openeuler/openeuler:22.03-lts-sp3
 
 LABEL MAINTAINER "www.witersen.com 2023-07-23"
 
@@ -17,8 +17,8 @@ RUN localedef -c -i en_US -f UTF-8 C.UTF-8 \
     && echo 'export LC_ALL="C.UTF-8"' >> /etc/profile
 RUN echo -e "[WandiscoSVN]\nname=Wandisco SVN Repo\nbaseurl=https://opensource.wandisco.com/centos/7/svn-1.14/RPMS${basearch}/\nenabled=1\ngpgcheck=0" > /etc/yum.repos.d/wandisco-svn.repo
 RUN cat /etc/yum.repos.d/wandisco-svn.repo
-RUN yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm 
-RUN yum install -y https://rpms.remirepo.net/enterprise/remi-release-7.rpm
+RUN yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm 
+RUN yum install -y https://rpms.remirepo.net/enterprise/remi-release-8.rpm
 RUN yum install -y epel-release yum-utils \
     && yum-config-manager --enable remi-${php_version} \
     && yum install -y php php-common php-cli php-fpm php-json php-mysqlnd php-pdo php-process php-json php-gd php-bcmath php-ldap php-mbstring\
