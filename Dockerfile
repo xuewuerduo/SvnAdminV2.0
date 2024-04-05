@@ -18,11 +18,11 @@ RUN ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime \
     && echo ${TZ} > /etc/timezone
 
 # 编码修改
-RUN localedef -c -i en_US -f UTF-8 C.UTF-8 \
-    && echo 'LANG="C.UTF-8"' >> /etc/sysconfig/i18n \
-    && echo 'LC_ALL="C.UTF-8"' >> /etc/sysconfig/i18n \
-    && echo 'export LANG="C.UTF-8"' >> /etc/profile \
-    && echo 'export LC_ALL="C.UTF-8"' >> /etc/profile
+#RUN localedef -c -i en_US -f UTF-8 C.UTF-8 \
+#    && echo 'LANG="C.UTF-8"' >> /etc/sysconfig/i18n \
+#    && echo 'LC_ALL="C.UTF-8"' >> /etc/sysconfig/i18n \
+#    && echo 'export LANG="C.UTF-8"' >> /etc/profile \
+#    && echo 'export LC_ALL="C.UTF-8"' >> /etc/profile
 
 
 # 开启php扩展安装
