@@ -15,18 +15,18 @@ RUN localedef -c -i en_US -f UTF-8 C.UTF-8 \
     && echo 'LC_ALL="C.UTF-8"' >> /etc/sysconfig/i18n \
     && echo 'export LANG="C.UTF-8"' >> /etc/profile \
     && echo 'export LC_ALL="C.UTF-8"' >> /etc/profile
-#RUN echo -e "[WandiscoSVN]\nname=Wandisco SVN Repo\nbaseurl=https://opensource.wandisco.com/centos/7/svn-1.14/RPMS${basearch}/\nenabled=1\ngpgcheck=0" > /etc/yum.repos.d/wandisco-svn.repo
-#RUN cat /etc/yum.repos.d/wandisco-svn.repo
-#RUN yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm 
-#RUN yum install -y https://rpms.remirepo.net/enterprise/remi-release-8.rpm
-#RUN yum install -y epel-release yum-utils \
-    && yum-config-manager --enable remi-${php_version} \
-    && yum install -y php php-common php-cli php-fpm php-json php-mysqlnd php-pdo php-process php-json php-gd php-bcmath php-ldap php-mbstring\
-    && yum install -y httpd mod_dav_svn mod_ldap mod_php subversion subversion-tools \
-    && yum install -y cyrus-sasl cyrus-sasl-lib cyrus-sasl-plain \
-    && yum install -y which \
-    && yum install -y cronie at \
-    && yum clean all
+# RUN echo -e "[WandiscoSVN]\nname=Wandisco SVN Repo\nbaseurl=https://opensource.wandisco.com/centos/7/svn-1.14/RPMS${basearch}/\nenabled=1\ngpgcheck=0" > /etc/yum.repos.d/wandisco-svn.repo
+# RUN cat /etc/yum.repos.d/wandisco-svn.repo
+# RUN yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm 
+# RUN yum install -y https://rpms.remirepo.net/enterprise/remi-release-8.rpm
+# RUN yum install -y epel-release yum-utils \
+#     && yum-config-manager --enable remi-${php_version} \
+#     && yum install -y php php-common php-cli php-fpm php-json php-mysqlnd php-pdo php-process php-json php-gd php-bcmath php-ldap php-mbstring\
+#     && yum install -y httpd mod_dav_svn mod_ldap mod_php subversion subversion-tools \
+#     && yum install -y cyrus-sasl cyrus-sasl-lib cyrus-sasl-plain \
+#     && yum install -y which \
+#     && yum install -y cronie at \
+#     && yum clean all
 RUN sudo apt install software-properties-common
 RUN sudo add-apt-repository ppa:ondrej/php
 RUN sudo apt update \
