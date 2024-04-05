@@ -9,7 +9,21 @@ ENV DEBIAN_FRONTEND noninteractive
 #克隆仓库
 #RUN git clone https://github.com/xuewuerduo/SvnAdminV2.0.git /tmp/svnadmin2
 
+#
+RUN mv /etc/apt/sources.list.d/debian.sources /etc/apt/sources.list.d/debian.sources.bak
+RUN echo '
+    deb https://mirrors.tuna.tsinghua.edu.cn/debian/ bookworm main contrib non-free non-free-firmware
+    # deb-src https://mirrors.tuna.tsinghua.edu.cn/debian/ bookworm main contrib non-free non-free-firmware
 
+    deb https://mirrors.tuna.tsinghua.edu.cn/debian/ bookworm-updates main contrib non-free non-free-firmware
+    # deb-src https://mirrors.tuna.tsinghua.edu.cn/debian/ bookworm-updates main contrib non-free non-free-firmware
+
+    deb https://mirrors.tuna.tsinghua.edu.cn/debian/ bookworm-backports main contrib non-free non-free-firmware
+    # deb-src https://mirrors.tuna.tsinghua.edu.cn/debian/ bookworm-backports main contrib non-free non-free-firmware
+
+    deb https://security.debian.org/debian-security bookworm-security main contrib non-free non-free-firmware
+    # deb-src https://security.debian.org/debian-security bookworm-security main contrib non-free non-free-firmware
+    '>/etc/apt/sources.list.d/source.list
 # 时间同步
 ENV TZ=Asia/Shanghai \
     DEBIAN_FRONTEND=noninteractive
