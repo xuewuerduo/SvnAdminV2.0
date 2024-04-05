@@ -19,10 +19,13 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build and push
+      #导入这个模块来完成自动编译和推送
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
+          #在这里通过加入需要编译的平台和前面配好的QEMU，buildx来达到多平台编译
+          platforms: linux/amd64,linux/arm64,linux/arm
           tags: xuewuerduo/svnadmin2:latest
       - name: Update repo description
         uses: peter-evans/dockerhub-description@v3
