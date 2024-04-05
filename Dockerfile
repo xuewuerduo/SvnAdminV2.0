@@ -1,6 +1,6 @@
 FROM ubuntu:20.04
 
-LABEL MAINTAINER "www.witersen.com 2023-07-23"
+LABEL MAINTAINER = "www.witersen.com 2023-07-23"
 
 # 时间同步
 ENV TZ=Asia/Shanghai \
@@ -27,9 +27,9 @@ RUN ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime \
 #     && yum install -y which \
 #     && yum install -y cronie at \
 #     && yum clean all
-RUN sudo apt install -y software-properties-common
-RUN sudo add-apt-repository ppa:ondrej/php
-RUN sudo apt update \
+# RUN sudo apt install -y software-properties-common
+# RUN sudo add-apt-repository ppa:ondrej/php
+RUN sudo apt update -y \
     && sudo apt install -y php8.2 libapache2-mod-php8.2 \
     && sudo apt install -y php php-common php-cli php-fpm php-json php-mysqlnd php-pdo php-process php-json php-gd php-bcmath php-ldap php-mbstring \
     && sudo apt install -y httpd mod_dav_svn mod_ldap mod_php subversion subversion-tools \
