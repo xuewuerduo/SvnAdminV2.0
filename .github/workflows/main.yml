@@ -23,7 +23,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: xuewuerduo/SvnAdminV2.0:latest
+          tags: xuewuerduo/svnadmin2:latest
       - name: Update repo description
         uses: peter-evans/dockerhub-description@v3
         with:
