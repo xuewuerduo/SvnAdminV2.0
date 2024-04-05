@@ -1,4 +1,4 @@
-FROM openeuler/openeuler:22.03-lts-sp3
+FROM openeuler/openeuler:20.03-lts-sp3, 20.03
 
 LABEL MAINTAINER "www.witersen.com 2023-07-23"
 
