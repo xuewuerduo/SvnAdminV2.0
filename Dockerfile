@@ -7,7 +7,7 @@ FROM php:8.2-apache
 ENV DEBIAN_FRONTEND noninteractive
 
 #克隆仓库
-RUN git clone https://github.com/xuewuerduo/SvnAdminV2.0.git /tmp/svnadmin2
+#RUN git clone https://github.com/xuewuerduo/SvnAdminV2.0.git /tmp/svnadmin2
 
 
 # 时间同步
@@ -99,7 +99,7 @@ RUN apt-get install -y \
 RUN sed -i 's/expose_php = On/expose_php = Off/g' /etc/php.ini 
 
 # 配置文件
-ADD /tmp/svnadmin2/03.cicd/svnadmin_docker/data/ /home/svnadmin/
+ADD 03.cicd/svnadmin_docker/data/ /home/svnadmin/
 RUN cd /home/svnadmin/ \
     && mkdir -p backup \
     && mkdir -p crond \
@@ -122,11 +122,11 @@ RUN curl -L -o /usr/local/node-v14.18.2-linux-x64.tar.gz https://registry.npmmir
 
 RUN mkdir /root/svnadmin_web 
 
-COPY /tmp/svnadmin2/01.web/package.json /root/svnadmin_web/
-COPY /tmp/svnadmin2/01.web/package-lock.json /root/svnadmin_web/
+COPY 01.web/package.json /root/svnadmin_web/
+COPY 01.web/package-lock.json /root/svnadmin_web/
 RUN cd /root/svnadmin_web && npm install
 
-COPY /tmp/svnadmin2/01.web/ /root/svnadmin_web/
+COPY 01.web/ /root/svnadmin_web/
 
 RUN cd /root/svnadmin_web/ \
     && npm run build \
@@ -135,9 +135,9 @@ RUN cd /root/svnadmin_web/ \
     && rm -rf /usr/local/node-v14.18.2-linux-x64*
 
 # 后端处理
-ADD /tmp/svnadmin2/02.php/ /var/www/html/
+ADD 02.php/ /var/www/html/
 
-ADD /tmp/svnadmin2/03.cicd/svnadmin_docker/start.sh /root/start.sh
+ADD 03.cicd/svnadmin_docker/start.sh /root/start.sh
 RUN chmod +x /root/start.sh
 
 EXPOSE 80
