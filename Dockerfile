@@ -91,6 +91,9 @@ RUN apt-get install -y \
 
 RUN git clone https://github.com/xuewuerduo/SvnAdminV2.0.git
 
+RUN ls -la
+RUN PWD
+
 
 
 # 关闭PHP彩蛋
