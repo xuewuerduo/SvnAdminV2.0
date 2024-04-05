@@ -39,10 +39,10 @@ RUN ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime \
 
 libsasl2-dev  libsasl2-modules
 # 开启php扩展安装
-RUN apt update && apt install -y \
 #    cyrus-sasl \
 #    cyrus-sasl-lib \
 #    cyrus-sasl-plain \
+RUN apt update -y && apt install -y \
     libsasl2-dev \
     libsasl2-modules \
     subversion \
