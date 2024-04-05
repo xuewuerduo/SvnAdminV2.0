@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:24.04
 
 LABEL MAINTAINER = "www.witersen.com 2023-07-23"
 
