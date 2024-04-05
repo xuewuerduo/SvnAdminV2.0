@@ -37,12 +37,14 @@ RUN ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime \
 #    && echo 'export LANG="C.UTF-8"' >> /etc/profile \
 #    && echo 'export LC_ALL="C.UTF-8"' >> /etc/profile
 
-
+libsasl2-dev  libsasl2-modules
 # 开启php扩展安装
 RUN apt update && apt install -y \
-    cyrus-sasl \
-    cyrus-sasl-lib \
-    cyrus-sasl-plain \
+#    cyrus-sasl \
+#    cyrus-sasl-lib \
+#    cyrus-sasl-plain \
+    libsasl2-dev \
+    libsasl2-modules \
     subversion \
     subversion-tools
 
