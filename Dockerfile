@@ -19,7 +19,6 @@ RUN echo -e "[WandiscoSVN]\nname=Wandisco SVN Repo\nbaseurl=https://opensource.w
 RUN cat /etc/yum.repos.d/wandisco-svn.repo
 RUN yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm 
 RUN yum install -y https://rpms.remirepo.net/enterprise/remi-release-7.rpm
-RUN rpm -Uvh remi-release*.rpm 
 RUN yum install -y epel-release yum-utils \
     && yum-config-manager --enable remi-${php_version} \
     && yum install -y php php-common php-cli php-fpm php-json php-mysqlnd php-mysql php-pdo php-process php-json php-gd php-bcmath php-ldap php-mbstring\
