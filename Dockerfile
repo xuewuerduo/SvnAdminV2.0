@@ -1,4 +1,5 @@
-FROM ubuntu:24.04
+#FROM ubuntu:24.04
+FROM php:8.2-apache
 
 LABEL MAINTAINER = "www.witersen.com 2023-07-23"
 
@@ -29,14 +30,23 @@ RUN ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime \
 #     && yum clean all
 # RUN sudo apt install -y software-properties-common
 # RUN sudo add-apt-repository ppa:ondrej/php
-#RUN sudo apt update -y
-RUN apt install -y php8.2 libapache2-mod-php8.2
-RUN apt install -y php php-common php-cli php-fpm php-json php-mysqlnd php-pdo php-process php-json php-gd php-bcmath php-ldap php-mbstring
-RUN apt install -y httpd mod_dav_svn mod_ldap mod_php subversion subversion-tools
-RUN apt install -y cyrus-sasl cyrus-sasl-lib cyrus-sasl-plain
-RUN apt install -y which cronie at
-RUN apt clean all
-    
+# RUN sudo apt update -y
+# RUN apt install -y php8.2 libapache2-mod-php8.2
+# RUN apt install -y php php-common php-cli php-fpm php-json php-mysqlnd php-pdo php-process php-json php-gd php-bcmath php-ldap php-mbstring
+# RUN apt install -y httpd mod_dav_svn mod_ldap mod_php subversion subversion-tools
+# RUN apt install -y cyrus-sasl cyrus-sasl-lib cyrus-sasl-plain
+# RUN apt install -y which cronie at
+# RUN apt clean all
+RUN apt install -y subversion \
+    && apt install -y mod_dav_svn \
+    && apt install -y mod_ldap \
+    && apt install -y mod_php \
+    && apt install -y subversion \
+    && apt install -y subversion-tools
+
+RUN pecl install libapache2-mod-php8.2 \
+	&& pecl install php-common php-cli php-fpm php-json php-mysqlnd php-pdo php-process php-json php-gd php-bcmath php-ldap php-mbstring \
+	&& docker-php-ext-enable redis xdebug
 
 # 配置文件
 ADD 03.cicd/svnadmin_docker/data/ /home/svnadmin/
