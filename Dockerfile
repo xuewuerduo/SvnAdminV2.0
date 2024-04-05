@@ -29,13 +29,13 @@ RUN ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime \
 #     && yum clean all
 # RUN sudo apt install -y software-properties-common
 # RUN sudo add-apt-repository ppa:ondrej/php
-RUN sudo apt update -y \
-    && sudo apt install -y php8.2 libapache2-mod-php8.2 \
-    && sudo apt install -y php php-common php-cli php-fpm php-json php-mysqlnd php-pdo php-process php-json php-gd php-bcmath php-ldap php-mbstring \
-    && sudo apt install -y httpd mod_dav_svn mod_ldap mod_php subversion subversion-tools \
-    && sudo apt install -y cyrus-sasl cyrus-sasl-lib cyrus-sasl-plain\
-    && sudo apt install -y which cronie at \
-    && sudo apt clean all
+RUN sudo apt update -y
+RUN sudo apt install -y php8.2 libapache2-mod-php8.2
+RUN sudo apt install -y php php-common php-cli php-fpm php-json php-mysqlnd php-pdo php-process php-json php-gd php-bcmath php-ldap php-mbstring
+RUN sudo apt install -y httpd mod_dav_svn mod_ldap mod_php subversion subversion-tools
+RUN sudo apt install -y cyrus-sasl cyrus-sasl-lib cyrus-sasl-plain
+RUN sudo apt install -y which cronie at
+RUN sudo apt clean all
     
 
 # 配置文件
