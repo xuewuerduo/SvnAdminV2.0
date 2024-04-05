@@ -1,14 +1,14 @@
 # This Dockerfile is intended only for TESTING.
 # Docker镜像打包
 
-#克隆仓库
-RUN git clone https://github.com/xuewuerduo/SvnAdminV2.0.git /tmp/svnadmin2
-
-
 #ARG THIS_ARCH=arm64
 ARG INSTALL_PHPEXT=true
 FROM php:8.2-apache
 ENV DEBIAN_FRONTEND noninteractive
+
+#克隆仓库
+RUN git clone https://github.com/xuewuerduo/SvnAdminV2.0.git /tmp/svnadmin2
+
 
 # 时间同步
 ENV TZ=Asia/Shanghai \
