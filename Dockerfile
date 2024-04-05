@@ -1,4 +1,4 @@
-FROM ubuntu:24.04
+FROM ubuntu:22.04
 
 LABEL MAINTAINER "www.witersen.com 2023-07-23"
 
@@ -27,7 +27,7 @@ RUN ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime \
 #     && yum install -y which \
 #     && yum install -y cronie at \
 #     && yum clean all
-RUN sudo -y apt install software-properties-common
+RUN sudo apt install -y software-properties-common
 RUN sudo add-apt-repository ppa:ondrej/php
 RUN sudo apt update \
     && sudo apt install -y php8.2 libapache2-mod-php8.2 \
