@@ -15,9 +15,9 @@ RUN localedef -c -i en_US -f UTF-8 C.UTF-8 \
     && echo 'LC_ALL="C.UTF-8"' >> /etc/sysconfig/i18n \
     && echo 'export LANG="C.UTF-8"' >> /etc/profile \
     && echo 'export LC_ALL="C.UTF-8"' >> /etc/profile
-
+https://opensource.wandisco.com/centos/7/svn-1.14/RPMS/
 RUN echo -e "[WandiscoSVN]\nname=Wandisco SVN Repo\nbaseurl=https://opensource.wandisco.com/centos/${releasever}/svn-1.14/RPMS/${basearch}/\nenabled=1\ngpgcheck=0" > /etc/yum.repos.d/wandisco-svn.repo
-
+RUN cat /etc/yum.repos.d/wandisco-svn.repo
 RUN yum install -y epel-release yum-utils \
     && rpm -Uvh https://mirrors.aliyun.com/remi/enterprise/remi-release-7.rpm \
     && yum-config-manager --enable remi-${php_version} \
