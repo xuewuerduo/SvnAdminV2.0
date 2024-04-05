@@ -37,7 +37,7 @@ RUN ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime \
 #    && echo 'export LANG="C.UTF-8"' >> /etc/profile \
 #    && echo 'export LC_ALL="C.UTF-8"' >> /etc/profile
 
-libsasl2-dev  libsasl2-modules
+#libsasl2-dev  libsasl2-modules
 # 开启php扩展安装
 #    cyrus-sasl \
 #    cyrus-sasl-lib \
