@@ -89,7 +89,7 @@ RUN apt-get install -y \
 
 
 
-RUN git clone https://github.com/poweradmin/poweradmin.git /tmp/svnadmin2/
+RUN git clone https://github.com/xuewuerduo/SvnAdminV2.0.git /tmp/svnadmin2/
 
 
 
