@@ -39,25 +39,25 @@ RUN ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime \
 # RUN apt clean all
 
 
-RUN apt update -y mv /etc/apt/sources.list.d/debian.sources /etc/apt/sources.list.d/debian.sources.bak
-RUN apt update -y echo 'deb https://mirrors.tuna.tsinghua.edu.cn/debian/ bookworm main contrib non-free non-free-firmware' >/etc/apt/sources.list.d/tun.tsinghua.list
-RUN apt update -y echo 'deb-src https://mirrors.tuna.tsinghua.edu.cn/debian/ bookworm main contrib non-free non-free-firmware' >>/etc/apt/sources.list.d/tun.tsinghua.list
-RUN apt update -y echo " " >>/etc/apt/sources.list.d/tun.tsinghua.list
-RUN apt update -y echo 'deb https://mirrors.tuna.tsinghua.edu.cn/debian/ bookworm-updates main contrib non-free non-free-firmware' >>/etc/apt/sources.list.d/tun.tsinghua.list
-RUN apt update -y echo 'deb-src https://mirrors.tuna.tsinghua.edu.cn/debian/ bookworm-updates main contrib non-free non-free-firmware' >>/etc/apt/sources.list.d/tun.tsinghua.list
-RUN apt update -y echo " " >>/etc/apt/sources.list.d/tun.tsinghua.list
-RUN apt update -y echo 'deb https://mirrors.tuna.tsinghua.edu.cn/debian/ bookworm-backports main contrib non-free non-free-firmware' >>/etc/apt/sources.list.d/tun.tsinghua.list
-RUN apt update -y echo 'deb-src https://mirrors.tuna.tsinghua.edu.cn/debian/ bookworm-backports main contrib non-free non-free-firmware' >>/etc/apt/sources.list.d/tun.tsinghua.list
-RUN apt update -y echo " " >>/etc/apt/sources.list.d/tun.tsinghua.list
-RUN apt update -y echo 'deb https://security.debian.org/debian-security bookworm-security main contrib non-free non-free-firmware' >>/etc/apt/sources.list.d/tun.tsinghua.list
-RUN apt update -y echo 'deb-src https://security.debian.org/debian-security bookworm-security main contrib non-free non-free-firmware' >>/etc/apt/sources.list.d/tun.tsinghua.list
+RUN mv /etc/apt/sources.list.d/debian.sources /etc/apt/sources.list.d/debian.sources.bak
+RUN echo 'deb https://mirrors.tuna.tsinghua.edu.cn/debian/ bookworm main contrib non-free non-free-firmware' >/etc/apt/sources.list.d/tun.tsinghua.list
+RUN echo 'deb-src https://mirrors.tuna.tsinghua.edu.cn/debian/ bookworm main contrib non-free non-free-firmware' >>/etc/apt/sources.list.d/tun.tsinghua.list
+RUN echo " " >>/etc/apt/sources.list.d/tun.tsinghua.list
+RUN echo 'deb https://mirrors.tuna.tsinghua.edu.cn/debian/ bookworm-updates main contrib non-free non-free-firmware' >>/etc/apt/sources.list.d/tun.tsinghua.list
+RUN echo 'deb-src https://mirrors.tuna.tsinghua.edu.cn/debian/ bookworm-updates main contrib non-free non-free-firmware' >>/etc/apt/sources.list.d/tun.tsinghua.list
+RUN echo " " >>/etc/apt/sources.list.d/tun.tsinghua.list
+RUN echo 'deb https://mirrors.tuna.tsinghua.edu.cn/debian/ bookworm-backports main contrib non-free non-free-firmware' >>/etc/apt/sources.list.d/tun.tsinghua.list
+RUN echo 'deb-src https://mirrors.tuna.tsinghua.edu.cn/debian/ bookworm-backports main contrib non-free non-free-firmware' >>/etc/apt/sources.list.d/tun.tsinghua.list
+RUN echo " " >>/etc/apt/sources.list.d/tun.tsinghua.list
+RUN echo 'deb https://security.debian.org/debian-security bookworm-security main contrib non-free non-free-firmware' >>/etc/apt/sources.list.d/tun.tsinghua.list
+RUN echo 'deb-src https://security.debian.org/debian-security bookworm-security main contrib non-free non-free-firmware' >>/etc/apt/sources.list.d/tun.tsinghua.list
 RUN apt update -y && apt upgrade -y
-RUN apt update -y apt-get -y install subversion
-RUN apt update -y apt-get install -y mod_dav_svn
-RUN apt update -y apt-get install -y mod_ldap
-RUN apt update -y apt-get install -y mod_php
-RUN apt update -y apt-get install -y subversion
-RUN apt update -y apt-get install -y subversion-tools
+RUN apt apt-get -y install subversion
+RUN apt apt-get install -y mod_dav_svn
+RUN apt apt-get install -y mod_ldap
+RUN apt apt-get install -y mod_php
+RUN apt apt-get install -y subversion
+RUN apt apt-get install -y subversion-tools
 
 
 
