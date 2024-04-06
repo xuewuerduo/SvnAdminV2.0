@@ -38,7 +38,7 @@ RUN ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime \
 # RUN apt install -y which cronie at
 # RUN apt clean all
 
-RUN sudo apt update -y \
+RUN apt update -y \
     && apt upgrade -y \
     && mv /etc/apt/sources.list.d/debian.sources /etc/apt/sources.list.d/debian.sources.bak \
     && echo 'deb https://mirrors.tuna.tsinghua.edu.cn/debian/ bookworm main contrib non-free non-free-firmware' >/etc/apt/sources.list.d/tun.tsinghua.list \
