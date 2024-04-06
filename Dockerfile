@@ -59,9 +59,8 @@ RUN apt install -y libapache2-mod-svn libsvn-dev openssl
 
 
 
-RUN pecl install libapache2-mod-php8.2 \
-    	&& pecl install php-common php-cli php-fpm php-json php-mysqlnd php-pdo php-process php-json php-gd php-bcmath php-ldap php-mbstring \
-    	&& docker-php-ext-enable redis xdebug
+RUN pecl install common cli fpm json mysqlnd pdo process json gd bcmath ldap mbstring \
+    	&& docker-php-ext-enable common cli fpm json mysqlnd pdo process json gd bcmath ldap mbstring
 
 # 配置文件
 ADD 03.cicd/svnadmin_docker/data/ /home/svnadmin/
