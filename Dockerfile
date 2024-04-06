@@ -53,14 +53,8 @@ RUN echo 'deb https://security.debian.org/debian-security bookworm-security main
 RUN echo 'deb-src https://security.debian.org/debian-security bookworm-security main contrib non-free non-free-firmware' >>/etc/apt/sources.list.d/tun.tsinghua.list
 RUN apt update -y && apt upgrade -y
 RUN apt install -y subversion
-RUN apt install -y subversion libapache2-mod-svn libsvn-dev openssl
-RUN apt install -y mod_ldap
-RUN apt install -y mod_php
-RUN apt install -y subversion
 RUN apt install -y subversion-tools
-
-
-
+RUN apt install -y libapache2-mod-svn libsvn-dev openssl
 
 
 
