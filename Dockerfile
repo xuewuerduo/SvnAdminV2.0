@@ -52,12 +52,12 @@ RUN echo " " >>/etc/apt/sources.list.d/tun.tsinghua.list
 RUN echo 'deb https://security.debian.org/debian-security bookworm-security main contrib non-free non-free-firmware' >>/etc/apt/sources.list.d/tun.tsinghua.list
 RUN echo 'deb-src https://security.debian.org/debian-security bookworm-security main contrib non-free non-free-firmware' >>/etc/apt/sources.list.d/tun.tsinghua.list
 RUN apt update -y && apt upgrade -y
-RUN apt apt-get -y install subversion
-RUN apt apt-get install -y mod_dav_svn
-RUN apt apt-get install -y mod_ldap
-RUN apt apt-get install -y mod_php
-RUN apt apt-get install -y subversion
-RUN apt apt-get install -y subversion-tools
+RUN apt install -y subversion
+RUN apt install -y mod_dav_svn
+RUN apt install -y mod_ldap
+RUN apt install -y mod_php
+RUN apt install -y subversion
+RUN apt install -y subversion-tools
 
 
 
