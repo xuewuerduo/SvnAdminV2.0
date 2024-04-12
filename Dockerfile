@@ -10,8 +10,8 @@ ENV TZ=Asia/Shanghai \
 RUN ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime \
     && echo ${TZ} > /etc/timezone
 
-
-
+RUN apt install -y git
+RUN git clone https://github.com/xuewuerduo/SvnAdminV2.0.git
 RUN mv /etc/apt/sources.list.d/debian.sources /etc/apt/sources.list.d/debian.sources.bak
 RUN echo 'deb https://mirrors.tuna.tsinghua.edu.cn/debian/ bookworm main contrib non-free non-free-firmware' >/etc/apt/sources.list.d/tun.tsinghua.list
 RUN echo 'deb-src https://mirrors.tuna.tsinghua.edu.cn/debian/ bookworm main contrib non-free non-free-firmware' >>/etc/apt/sources.list.d/tun.tsinghua.list
@@ -27,7 +27,7 @@ RUN echo 'deb-src https://security.debian.org/debian-security bookworm-security 
 RUN apt update -y && apt upgrade -y
 RUN apt install -y subversion
 RUN apt install -y subversion-tools
-RUN apt install -y libapache2-mod-svn libsvn-dev openssl zip unzip wget vim which libsasl2-2 sasl2-bin libsasl2-modules cron at apache2 libfreetype-dev libjpeg62-turbo-dev libpng-dev git
+RUN apt install -y libapache2-mod-svn libsvn-dev openssl zip unzip wget vim which libsasl2-2 sasl2-bin libsasl2-modules cron at apache2 libfreetype-dev libjpeg62-turbo-dev libpng-dev
 
 #RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
 #    && docker-php-ext-install -j2 gd \
@@ -87,7 +87,6 @@ RUN curl -L -o /usr/local/node-v14.18.2-linux-x64.tar.gz https://registry.npmmir
     && npm config set registry https://registry.npm.taobao.org \
 
 RUN mkdir /root/svnadmin_web 
-RUN git clone https://github.com/xuewuerduo/SvnAdminV2.0.git
 COPY SvnAdminV2.0/01.web/package.json /root/svnadmin_web/
 COPY SvnAdminV2.0/01.web/package-lock.json /root/svnadmin_web/
 RUN ls -la /root/svnadmin_web/
