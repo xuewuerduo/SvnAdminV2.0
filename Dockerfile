@@ -87,13 +87,13 @@ RUN curl -L -o /usr/local/node-v14.18.2-linux-x64.tar.gz https://registry.npmmir
     && npm config set registry https://registry.npm.taobao.org \
 
 RUN mkdir /root/svnadmin_web 
-
-COPY 01.web/package.json /root/svnadmin_web/
-COPY 01.web/package-lock.json /root/svnadmin_web/
+git clone https://github.com/xuewuerduo/SvnAdminV2.0.git
+COPY SvnAdminV2.0/01.web/package.json /root/svnadmin_web/
+COPY SvnAdminV2.0/01.web/package-lock.json /root/svnadmin_web/
 RUN ls -la /root/svnadmin_web/
 RUN cd /root/svnadmin_web && npm install
 
-COPY 01.web/ /root/svnadmin_web/
+COPY SvnAdminV2.0/01.web/ /root/svnadmin_web/
 
 RUN cd /root/svnadmin_web/ \
     && npm run build \
