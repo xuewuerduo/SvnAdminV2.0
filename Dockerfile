@@ -11,7 +11,7 @@ RUN ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime \
     && echo ${TZ} > /etc/timezone
 
 RUN apt install -y git
-RUN git clone https://github.com/xuewuerduo/SvnAdminV2.0.git
+RUN git clone https://gitee.com/witersen/SvnAdminV2.0.git
 RUN mv /etc/apt/sources.list.d/debian.sources /etc/apt/sources.list.d/debian.sources.bak
 RUN echo 'deb https://mirrors.tuna.tsinghua.edu.cn/debian/ bookworm main contrib non-free non-free-firmware' >/etc/apt/sources.list.d/tun.tsinghua.list
 RUN echo 'deb-src https://mirrors.tuna.tsinghua.edu.cn/debian/ bookworm main contrib non-free non-free-firmware' >>/etc/apt/sources.list.d/tun.tsinghua.list
