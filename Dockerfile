@@ -38,19 +38,19 @@ RUN apt install -y libapache2-mod-svn libsvn-dev openssl zip unzip wget vim whic
 #    && docker-php-ext-configure pdo_mysql \
 #    && docker-php-ext-install -j2 pdo_mysql
 
-RUN docker-php-ext-install gd --with-freetype --with-jpeg
-RUN docker-php-ext-configure gd
+RUN /usr/local/bin/docker-php-ext-configure gd --with-freetype --with-jpeg
+RUN /usr/local/bin/docker-php-ext-configure gd
 
-RUN docker-php-ext-configure bcmath
-RUN docker-php-ext-install bcmath
-
-
-RUN docker-php-ext-configure ldap
-RUN docker-php-ext-install ldap
+RUN /usr/local/bin/docker-php-ext-configure bcmath
+RUN /usr/local/bin/docker-php-ext-install bcmath
 
 
-RUN docker-php-ext-configure pdo_mysql
-RUN docker-php-ext-install pdo_mysql
+RUN /usr/local/bin/docker-php-ext-configure ldap
+RUN /usr/local/bin/docker-php-ext-install ldap
+
+
+RUN /usr/local/bin/docker-php-ext-configure pdo_mysql
+RUN /usr/local/bin/docker-php-ext-install pdo_mysql
 
 
 
