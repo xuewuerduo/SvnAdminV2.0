@@ -61,14 +61,22 @@ RUN apt install -y libapache2-mod-svn libsvn-dev openssl zip unzip wget vim whic
 #RUN apt install -y php8.2-process
 #RUN apt install -y php8.2-bcmath
 #RUN apt install -y php8.2-ldap
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j2 gd \
-    && docker-php-ext-configure bcmath --with-zlib \
-    && docker-php-ext-install -j2 bcmath \
-    && docker-php-ext-configure ldap \
-    && docker-php-ext-install -j2 ldap \
-    && docker-php-ext-configure pdo_mysql \
-    && docker-php-ext-install -j2 pdo_mysql
+#RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+#    && docker-php-ext-install -j2 gd \
+#    && docker-php-ext-configure bcmath --with-zlib \
+#    && docker-php-ext-install -j2 bcmath \
+#    && docker-php-ext-configure ldap \
+#    && docker-php-ext-install -j2 ldap \
+#    && docker-php-ext-configure pdo_mysql \
+#    && docker-php-ext-install -j2 pdo_mysql
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg
+RUN docker-php-ext-install gd
+RUN docker-php-ext-configure bcmath --with-zlib
+RUN docker-php-ext-install bcmath
+RUN docker-php-ext-configure ldap
+RUN docker-php-ext-install ldap
+RUN docker-php-ext-configure pdo_mysql
+RUN docker-php-ext-install pdo_mysql
 
 
 
