@@ -55,12 +55,16 @@ RUN apt update -y && apt upgrade -y
 RUN apt install -y subversion
 RUN apt install -y subversion-tools
 RUN apt install -y libapache2-mod-svn libsvn-dev openssl zip unzip wget vim which libsasl2-2 sasl2-bin libsasl2-modules cron at
-RUN apt install -y php8.2-common
-RUN apt install -y php8.2-gd
-RUN apt install -y php8.2-pdo
-RUN apt install -y php8.2-process
-RUN apt install -y php8.2-bcmath
-RUN apt install -y php8.2-ldap
+#RUN apt install -y php8.2-common
+#RUN apt install -y php8.2-gd
+#RUN apt install -y php8.2-pdo
+#RUN apt install -y php8.2-process
+#RUN apt install -y php8.2-bcmath
+#RUN apt install -y php8.2-ldap
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+	&& docker-php-ext-install -j$(nproc) gd \
+RUN docker-php-ext-configure common \
+    && docker-php-ext-install -j$(nproc) common
 
 #php-common php-cli php-fpm php-mysqlnd php-mysql php-pdo php-process php-json php-gd php-bcmath php-ldap php-mbstring
 #RUN pecl install common  fpm  process gd bcmath ldap \
