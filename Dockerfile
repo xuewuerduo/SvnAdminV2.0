@@ -10,33 +10,6 @@ ENV TZ=Asia/Shanghai \
 RUN ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime \
     && echo ${TZ} > /etc/timezone
 
-# 编码修改
-# RUN localedef -c -i en_US -f UTF-8 C.UTF-8 \
-#     && echo 'LANG="C.UTF-8"' >> /etc/sysconfig/i18n \
-#     && echo 'LC_ALL="C.UTF-8"' >> /etc/sysconfig/i18n \
-#     && echo 'export LANG="C.UTF-8"' >> /etc/profile \
-#     && echo 'export LC_ALL="C.UTF-8"' >> /etc/profile
-# RUN echo -e "[WandiscoSVN]\nname=Wandisco SVN Repo\nbaseurl=https://opensource.wandisco.com/centos/7/svn-1.14/RPMS${basearch}/\nenabled=1\ngpgcheck=0" > /etc/yum.repos.d/wandisco-svn.repo
-# RUN cat /etc/yum.repos.d/wandisco-svn.repo
-# RUN yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm 
-# RUN yum install -y https://rpms.remirepo.net/enterprise/remi-release-8.rpm
-# RUN yum install -y epel-release yum-utils \
-#     && yum-config-manager --enable remi-${php_version} \
-#     && yum install -y php php-common php-cli php-fpm php-json php-mysqlnd php-pdo php-process php-json php-gd php-bcmath php-ldap php-mbstring\
-#     && yum install -y httpd mod_dav_svn mod_ldap mod_php subversion subversion-tools \
-#     && yum install -y cyrus-sasl cyrus-sasl-lib cyrus-sasl-plain \
-#     && yum install -y which \
-#     && yum install -y cronie at \
-#     && yum clean all
-# RUN sudo apt install -y software-properties-common
-# RUN sudo add-apt-repository ppa:ondrej/php
-# RUN sudo apt update -y
-# RUN apt install -y php8.2 libapache2-mod-php8.2
-# RUN apt install -y php php-common php-cli php-fpm php-json php-mysqlnd php-pdo php-process php-json php-gd php-bcmath php-ldap php-mbstring
-# RUN apt install -y httpd mod_dav_svn mod_ldap mod_php subversion subversion-tools
-# RUN apt install -y cyrus-sasl cyrus-sasl-lib cyrus-sasl-plain
-# RUN apt install -y which cronie at
-# RUN apt clean all
 
 
 RUN mv /etc/apt/sources.list.d/debian.sources /etc/apt/sources.list.d/debian.sources.bak
@@ -51,16 +24,11 @@ RUN echo 'deb-src https://mirrors.tuna.tsinghua.edu.cn/debian/ bookworm-backport
 RUN echo " " >>/etc/apt/sources.list.d/tun.tsinghua.list
 RUN echo 'deb https://security.debian.org/debian-security bookworm-security main contrib non-free non-free-firmware' >>/etc/apt/sources.list.d/tun.tsinghua.list
 RUN echo 'deb-src https://security.debian.org/debian-security bookworm-security main contrib non-free non-free-firmware' >>/etc/apt/sources.list.d/tun.tsinghua.list
-#RUN apt update -y && apt upgrade -y
-#RUN apt install -y subversion
-#RUN apt install -y subversion-tools
-#RUN apt install -y libapache2-mod-svn libsvn-dev openssl zip unzip wget vim which libsasl2-2 sasl2-bin libsasl2-modules cron at apache2
-#RUN apt install -y php8.2-common
-#RUN apt install -y php8.2-gd
-#RUN apt install -y php8.2-php-
-#RUN apt install -y php8.2-process
-#RUN apt install -y php8.2-bcmath
-#RUN apt install -y php8.2-ldap
+RUN apt update -y && apt upgrade -y
+RUN apt install -y subversion
+RUN apt install -y subversion-tools
+RUN apt install -y libapache2-mod-svn libsvn-dev openssl zip unzip wget vim which libsasl2-2 sasl2-bin libsasl2-modules cron at apache2
+
 #RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
 #    && docker-php-ext-install -j2 gd \
 #    && docker-php-ext-configure bcmath --with-zlib \
@@ -69,8 +37,9 @@ RUN echo 'deb-src https://security.debian.org/debian-security bookworm-security 
 #    && docker-php-ext-install -j2 ldap \
 #    && docker-php-ext-configure pdo_mysql \
 #    && docker-php-ext-install -j2 pdo_mysql
-#RUN docker-php-ext-install gd --with-freetype --with-jpeg
-#RUN docker-php-ext-configure gd
+
+RUN docker-php-ext-install gd --with-freetype --with-jpeg
+RUN docker-php-ext-configure gd
 
 RUN docker-php-ext-configure bcmath
 RUN docker-php-ext-install bcmath
