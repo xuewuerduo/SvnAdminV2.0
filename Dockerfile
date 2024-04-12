@@ -54,27 +54,29 @@ RUN echo 'deb-src https://security.debian.org/debian-security bookworm-security 
 RUN apt update -y && apt upgrade -y
 RUN apt install -y subversion
 RUN apt install -y subversion-tools
-RUN apt install -y libapache2-mod-svn libsvn-dev openssl zip unzip wget vim which libsasl2-2 sasl2-bin libsasl2-modules cron at httpd
+RUN apt install -y libapache2-mod-svn libsvn-dev openssl zip unzip wget vim which libsasl2-2 sasl2-bin libsasl2-modules cron at apache2 \
 #RUN apt install -y php8.2-common
 #RUN apt install -y php8.2-gd
-#RUN apt install -y php8.2-pdo
+#RUN apt install -y php8.2-php-
 #RUN apt install -y php8.2-process
 #RUN apt install -y php8.2-bcmath
 #RUN apt install -y php8.2-ldap
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg
-RUN docker-php-ext-install -j2 gd
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j2 gd \
+    && docker-php-ext-configure bcmath --with-zlib \
+    && docker-php-ext-install -j2 bcmath \
+    && docker-php-ext-configure ldap \
+    && docker-php-ext-install -j2 ldap \
+    && docker-php-ext-configure pdo_mysql \
+    && docker-php-ext-install -j2 pdo_mysql
 
 
-RUN docker-php-ext-configure bcmath
-RUN docker-php-ext-install -j2 bcmath
 
 
 
 
 
-
-
-#php-common php-cli php-fpm php-mysqlnd php-mysql php-pdo php-process php-json php-gd php-bcmath php-ldap php-mbstring
+#php-common php-cli php-fpm php-mysqlnd php-mysql php-pdo php-php php-json php-gd php-bcmath php-ldap php-mbstring
 #RUN pecl install common  fpm  process gd bcmath ldap \
 #    && docker-php-ext-enable common cli fpm json mysqlnd pdo process json gd bcmath ldap mbstring
 
