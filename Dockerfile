@@ -52,9 +52,9 @@ RUN echo " " >>/etc/apt/sources.list.d/tun.tsinghua.list
 RUN echo 'deb https://security.debian.org/debian-security bookworm-security main contrib non-free non-free-firmware' >>/etc/apt/sources.list.d/tun.tsinghua.list
 RUN echo 'deb-src https://security.debian.org/debian-security bookworm-security main contrib non-free non-free-firmware' >>/etc/apt/sources.list.d/tun.tsinghua.list
 #RUN apt update -y && apt upgrade -y
-RUN apt install -y subversion
-RUN apt install -y subversion-tools
-RUN apt install -y libapache2-mod-svn libsvn-dev openssl zip unzip wget vim which libsasl2-2 sasl2-bin libsasl2-modules cron at apache2
+#RUN apt install -y subversion
+#RUN apt install -y subversion-tools
+#RUN apt install -y libapache2-mod-svn libsvn-dev openssl zip unzip wget vim which libsasl2-2 sasl2-bin libsasl2-modules cron at apache2
 #RUN apt install -y php8.2-common
 #RUN apt install -y php8.2-gd
 #RUN apt install -y php8.2-php-
