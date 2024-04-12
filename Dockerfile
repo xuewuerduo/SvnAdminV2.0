@@ -54,14 +54,14 @@ RUN echo 'deb-src https://security.debian.org/debian-security bookworm-security 
 RUN apt update -y && apt upgrade -y
 RUN apt install -y subversion
 RUN apt install -y subversion-tools
-RUN apt install -y libapache2-mod-svn libsvn-dev openssl zip unzip wget vim which libsasl2-2 sasl2-bin libsasl2-modules cron at apache2 \
+RUN apt install -y libapache2-mod-svn libsvn-dev openssl zip unzip wget vim which libsasl2-2 sasl2-bin libsasl2-modules cron at apache2
 #RUN apt install -y php8.2-common
 #RUN apt install -y php8.2-gd
 #RUN apt install -y php8.2-php-
 #RUN apt install -y php8.2-process
 #RUN apt install -y php8.2-bcmath
 #RUN apt install -y php8.2-ldap
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j2 gd \
     && docker-php-ext-configure bcmath --with-zlib \
     && docker-php-ext-install -j2 bcmath \
