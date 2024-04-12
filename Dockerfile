@@ -72,7 +72,8 @@ RUN cd /home/svnadmin/ \
     && mkdir -p templete/initStruct/01/branches \
     && mkdir -p templete/initStruct/01/tags \
     && mkdir -p templete/initStruct/01/trunk 
-RUN chown -R apache:apache /home/svnadmin/ && mkdir -p /run/php-fpm/
+#RUN chown -R apache:apache /home/svnadmin/ && mkdir -p /run/php-fpm/
+RUN chown -R www-data:www-data /home/svnadmin/ && mkdir -p /run/php-fpm/
 
 # 关闭PHP彩蛋
 #RUN sed -i 's/expose_php = On/expose_php = Off/g' /etc/php.ini
