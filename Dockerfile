@@ -60,7 +60,7 @@ RUN apt install -y libapache2-mod-svn libsvn-dev openssl
 
 
 RUN pecl install common cli fpm json mysqlnd pdo process json gd bcmath ldap mbstring \
-    	&& docker-php-ext-enable common cli fpm json mysqlnd pdo process json gd bcmath ldap mbstring
+    && docker-php-ext-enable common cli fpm json mysqlnd pdo process json gd bcmath ldap mbstring
 
 # 配置文件
 ADD 03.cicd/svnadmin_docker/data/ /home/svnadmin/
