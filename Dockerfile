@@ -62,19 +62,19 @@ RUN apt install -y libapache2-mod-svn libsvn-dev openssl zip unzip wget vim whic
 #RUN apt install -y php8.2-bcmath
 #RUN apt install -y php8.2-ldap
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) gd \
+    && docker-php-ext-install -j2 gd \
 
 RUN docker-php-ext-configure common \
-    && docker-php-ext-install -j$(nproc) common
+    && docker-php-ext-install -j2 common
 
 RUN docker-php-ext-configure process \
-    && docker-php-ext-install -j$(nproc) process
+    && docker-php-ext-install -j2 process
 
 RUN docker-php-ext-configure bcmath \
-    && docker-php-ext-install -j$(nproc) bcmath
+    && docker-php-ext-install -j2 bcmath
 
 RUN docker-php-ext-configure ldap \
-    && docker-php-ext-install -j$(nproc) ldap
+    && docker-php-ext-install -j2 ldap
 
 
 
