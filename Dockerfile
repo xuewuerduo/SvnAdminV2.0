@@ -1,5 +1,5 @@
 #FROM ubuntu:24.04
-FROM php:8.2-apache
+FROM php:8.2-fpm
 
 LABEL MAINTAINER = "www.witersen.com 2023-07-23"
 
@@ -54,7 +54,7 @@ RUN echo 'deb-src https://security.debian.org/debian-security bookworm-security 
 RUN apt update -y && apt upgrade -y
 RUN apt install -y subversion
 RUN apt install -y subversion-tools
-RUN apt install -y libapache2-mod-svn libsvn-dev openssl zip unzip wget vim which libsasl2-2 sasl2-bin libsasl2-modules cron at
+RUN apt install -y libapache2-mod-svn libsvn-dev openssl zip unzip wget vim which libsasl2-2 sasl2-bin libsasl2-modules cron at httpd
 #RUN apt install -y php8.2-common
 #RUN apt install -y php8.2-gd
 #RUN apt install -y php8.2-pdo
@@ -91,7 +91,7 @@ RUN cd /home/svnadmin/ \
 RUN chown -R apache:apache /home/svnadmin/ && mkdir -p /run/php-fpm/
 
 # 关闭PHP彩蛋
-RUN sed -i 's/expose_php = On/expose_php = Off/g' /etc/php.ini 
+#RUN sed -i 's/expose_php = On/expose_php = Off/g' /etc/php.ini
 
 # 前端处理
 
