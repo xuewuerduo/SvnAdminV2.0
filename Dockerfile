@@ -54,13 +54,13 @@ RUN echo 'deb-src https://security.debian.org/debian-security bookworm-security 
 RUN apt update -y && apt upgrade -y
 RUN apt install -y subversion
 RUN apt install -y subversion-tools
-RUN apt install -y libapache2-mod-svn libsvn-dev openssl
+RUN apt install -y libapache2-mod-svn libsvn-dev openssl zip unzip wget vim which libsasl2-2 sasl2-bin libsasl2-modules cron at
+RUN apt install -y php-common php-gd  php-pdo php-process php-bcmath php-ldap
 
 
-
-
-RUN pecl install common cli fpm json mysqlnd pdo process json gd bcmath ldap mbstring \
-    && docker-php-ext-enable common cli fpm json mysqlnd pdo process json gd bcmath ldap mbstring
+#php-common php-cli php-fpm php-mysqlnd php-mysql php-pdo php-process php-json php-gd php-bcmath php-ldap php-mbstring
+#RUN pecl install common  fpm  process gd bcmath ldap \
+#    && docker-php-ext-enable common cli fpm json mysqlnd pdo process json gd bcmath ldap mbstring
 
 # 配置文件
 ADD 03.cicd/svnadmin_docker/data/ /home/svnadmin/
