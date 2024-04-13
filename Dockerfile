@@ -51,7 +51,8 @@ RUN ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime \
 
 
 # 配置文件
-ADD 03.cicd/svnadmin_docker/data/ /home/svnadmin/
+ADD ./03.cicd/svnadmin_docker/data/ /home/svnadmin/
+RUN ls /home/svnadmin/
 RUN cd /home/svnadmin/ \
     && mkdir -p backup \
     && mkdir -p crond \
@@ -75,7 +76,7 @@ RUN curl -L -o /usr/local/node-v14.18.2-linux-x64.tar.gz https://registry.npmmir
 RUN ls
 #RUN ls -la SvnAdminV2.0/
 RUN mkdir /root/svnadmin_web 
-COPY 01.web/package.json /root/svnadmin_web/
+COPY ./01.web/package.json /root/svnadmin_web/
 #COPY 01.web/package-lock.json /root/svnadmin_web/
 #RUN ls -la /root/svnadmin_web/
 RUN cd /root/svnadmin_web 
