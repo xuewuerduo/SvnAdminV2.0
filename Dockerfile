@@ -67,12 +67,13 @@ RUN chown -R www-data:www-data /home/svnadmin/ && mkdir -p /run/php-fpm/
 # 前端处理
 
 RUN curl -L -o /usr/local/node-v14.18.2-linux-x64.tar.gz https://registry.npmmirror.com/-/binary/node/latest-v14.x/node-v14.18.2-linux-x64.tar.gz \
-    && tar -xvf /usr/local/node-v14.18.2-linux-x64.tar.gz -C /usr/local/ \
+    && tar -xf /usr/local/node-v14.18.2-linux-x64.tar.gz -C /usr/local/ \
     && ln -s /usr/local/node-v14.18.2-linux-x64/bin/node /usr/local/bin/node \
     && ln -s /usr/local/node-v14.18.2-linux-x64/bin/npm /usr/local/bin/npm \
     && npm config set registry https://registry.npm.taobao.org \
     
-RUN cat package.json 
+RUN ls -la
+RUN ls -la SvnAdminV2.0/
 RUN mkdir /root/svnadmin_web 
 COPY 01.web/package.json /root/svnadmin_web/
 #COPY 01.web/package-lock.json /root/svnadmin_web/
