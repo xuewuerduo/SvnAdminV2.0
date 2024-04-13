@@ -51,6 +51,9 @@ RUN ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime \
 
 
 # 配置文件
+RUN mkdir /root/svnadmin_web 
+ADD ./01.web/ /root/svnadmin_web/
+RUN ls
 ADD ./03.cicd/svnadmin_docker/data/ /home/svnadmin/
 RUN ls /home/svnadmin/
 RUN cd /home/svnadmin/ \
