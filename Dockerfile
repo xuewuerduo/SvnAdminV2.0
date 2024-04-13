@@ -77,6 +77,7 @@ RUN ls
 #RUN ls -la SvnAdminV2.0/
 RUN mkdir /root/svnadmin_web 
 ADD ./01.web/package.json /root/svnadmin_web/
+RUN ls
 #COPY 01.web/package-lock.json /root/svnadmin_web/
 #RUN ls -la /root/svnadmin_web/
 RUN cd /root/svnadmin_web 
