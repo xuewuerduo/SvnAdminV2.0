@@ -76,7 +76,9 @@ RUN mkdir /root/svnadmin_web
 COPY 01.web/package.json /root/svnadmin_web/
 COPY 01.web/package-lock.json /root/svnadmin_web/
 #RUN ls -la /root/svnadmin_web/
-RUN cd /root/svnadmin_web && cat package.json && npm install
+RUN cd /root/svnadmin_web 
+RUN cat package.json 
+RUN npm install
 
 COPY 01.web/ /root/svnadmin_web/
 
