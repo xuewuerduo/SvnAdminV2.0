@@ -7,8 +7,8 @@ LABEL MAINTAINER = "www.witersen.com 2023-07-23"
 ENV TZ=Asia/Shanghai \
     DEBIAN_FRONTEND=noninteractive
 
-#RUN ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime \
-#    && echo ${TZ} > /etc/timezone
+RUN ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime \
+    && echo ${TZ} > /etc/timezone
 #
 #RUN apt install -y git
 #RUN git clone https://gitee.com/witersen/SvnAdminV2.0.git
