@@ -8,8 +8,6 @@ on:
       - ".github/**"
   pull_request:
     branches: ["arm"]      
-
-
       
 jobs:
   docker:
