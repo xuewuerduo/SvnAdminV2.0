@@ -34,7 +34,7 @@ RUN usermod -u ${BOOT2DOCKER_ID} www-data && \
     groupmod -g $(($BOOT2DOCKER_GID + 10000)) $(getent group $BOOT2DOCKER_GID | cut -d: -f1) && \
     groupmod -g ${BOOT2DOCKER_GID} staff
 
-# Install packages
+# 安装 packages
 ENV DEBIAN_FRONTEND noninteractive
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
 RUN LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php && \
