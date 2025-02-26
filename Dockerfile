@@ -88,12 +88,12 @@ RUN chown -R www-data:www-data /home/svnadmin/ && \
 
 
 # 前端处理
-RUN cd /root/svnadmin_web
 ADD 01.web/package.json /root/svnadmin_web/package.json
-RUN npm install
-RUN npm run build
-RUN mv dist/* /app \
-    && rm -rf /root/svnadmin_web \
+RUN cd /root/svnadmin_web && \
+    npm install && \
+    npm run build && \
+    mv dist/* /app \
+    && rm -rf /root/svnadmin_web
 
 
 # 后端处理
