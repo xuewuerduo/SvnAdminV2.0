@@ -48,7 +48,7 @@ RUN LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php && \
   apt-get -y clean && \
   echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
-# Install supervisor 4
+# 安装 supervisor 4
 RUN curl -L https://pypi.io/packages/source/s/supervisor/supervisor-${SUPERVISOR_VERSION}.tar.gz | tar xvz && \
   cd supervisor-${SUPERVISOR_VERSION}/ && \
   python3 setup.py install
