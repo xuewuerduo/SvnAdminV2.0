@@ -23,8 +23,6 @@ ENV PHP_VERSION=8.0
 ENV PHP_UPLOAD_MAX_FILESIZE 1024M
 ENV PHP_POST_MAX_SIZE 1024M
 
-#ARG PHP_VERSION
-#ENV PHP_VERSION=$PHP_VERSION
 
 # Tweaks to give Apache/PHP write permissions to the app
 RUN usermod -u ${BOOT2DOCKER_ID} www-data && \
@@ -86,6 +84,7 @@ RUN cd /home/svnadmin/ && \
 RUN chown -R www-data:www-data /home/svnadmin/ && \
     mkdir -p /run/php-fpm/
 
+RUN sed -i  "s/;date.timezone =/date.timezone = Asia\/Shanghai/g" /etc/php/${PHP_VERSION}/cli/php.ini
 
 # 前端处理
 ADD 01.web/package.json /root/svnadmin_web/package.json
@@ -105,4 +104,4 @@ EXPOSE 80
 EXPOSE 443
 EXPOSE 3690
 
-CMD ["/root/run.sh 8.0"]
+CMD ["/root/run.sh"]

@@ -12,12 +12,12 @@
 # Returns:
 #   None
 #######################################
-function replace_cli_php_ini_values () {
-    echo "Replacing CLI php.ini values"
-    sed -i  "s/;date.timezone =/date.timezone = Asia\/Shanghai/g" /etc/php/$1/cli/php.ini
-}
-if [ -e /etc/php/5.6/cli/php.ini ]; then replace_cli_php_ini_values "5.6"; fi
-if [ -e /etc/php/$PHP_VERSION/cli/php.ini ]; then replace_cli_php_ini_values $PHP_VERSION; fi
+#function replace_cli_php_ini_values () {
+#    echo "Replacing CLI php.ini values"
+#    sed -i  "s/;date.timezone =/date.timezone = Asia\/Shanghai/g" /etc/php/$1/cli/php.ini
+#}
+#if [ -e /etc/php/5.6/cli/php.ini ]; then replace_cli_php_ini_values "5.6"; fi
+#if [ -e /etc/php/$PHP_VERSION/cli/php.ini ]; then replace_cli_php_ini_values $PHP_VERSION; fi
 
 echo "Editing APACHE_RUN_GROUP environment variable"
 sed -i "s/export APACHE_RUN_GROUP=www-data/export APACHE_RUN_GROUP=staff/" /etc/apache2/envvars
@@ -28,7 +28,7 @@ if [ -n "$APACHE_ROOT" ];then
 fi
 
 
-
+export APACHE_ROOT=/app
 # Listen only on IPv4 addresses
 sed -i 's/^Listen .*/Listen 0.0.0.0:80/' /etc/apache2/ports.conf
 
@@ -56,6 +56,7 @@ mkdir -p /run/apache2
 #chown -R apache:apache /run/httpd
 chown -R www-data:www-data /run/httpd
 #/usr/sbin/apache2
+/usr/sbin/php-fpm
 
 
 while [[ true ]]; do
