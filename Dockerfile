@@ -80,7 +80,7 @@ RUN ln -s /usr/sbin/php-fpm8.0 /usr/sbin/php-fpm \
 
 RUN mkdir /root/svnadmin_web
 ADD 01.web/ /root/svnadmin_web/
-ADD 03.cicd/data/ /home/svnadmin/
+ADD 03.cicd/svnadmin_docker/data/ /home/svnadmin/
 RUN cd /home/svnadmin/ && \
     mkdir -p backup crond rep temp templete/initStruct/01/branches templete/initStruct/01/tags templete/initStruct/01/trunk
 RUN chown -R www-data:www-data /home/svnadmin/ && \
