@@ -10,7 +10,6 @@ ENV TZ=Asia/Shanghai \
 RUN ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime \
     && echo ${TZ} > /etc/timezone
 
-
 ENV DOCKER_USER_ID 501
 ENV DOCKER_USER_GID 20
 
