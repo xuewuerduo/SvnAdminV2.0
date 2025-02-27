@@ -112,7 +112,7 @@ RUN ln -s /usr/sbin/apache2 /usr/sbin/httpd
 RUN mkdir -p /etc/httpd/conf.d && \
     mv /etc/apache2/mods-enabled/dav_svn.conf /etc/apache2/mods-enabled/dav_svn.conf.bak && \
     ln -s /etc/httpd/conf.d/subversion.conf /etc/apache2/mods-enabled/dav_svn.conf && \
-    'apache_modules_path' => '/etc/httpd/modules/',/usr/lib/apache2/modules/
+
 
 RUN echo export APACHE_RUN_USER=www-data >> /etc/profile && \
     echo export APACHE_RUN_GROUP=staff >> /etc/profile && \
