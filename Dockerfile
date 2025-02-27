@@ -47,10 +47,10 @@ RUN LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php && \
   apt-get -y clean && \
   echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
-# 安装 supervisor 4
-RUN curl -L https://pypi.io/packages/source/s/supervisor/supervisor-${SUPERVISOR_VERSION}.tar.gz | tar xvz && \
-  cd supervisor-${SUPERVISOR_VERSION}/ && \
-  python3 setup.py install
+## 安装 supervisor 4
+#RUN curl -L https://pypi.io/packages/source/s/supervisor/supervisor-${SUPERVISOR_VERSION}.tar.gz | tar xvz && \
+#  cd supervisor-${SUPERVISOR_VERSION}/ && \
+#  python3 setup.py install
 
 # Add image configuration and scripts
 ADD 03.cicd/supporting_files/start-apache2.sh /start-apache2.sh
@@ -110,8 +110,9 @@ RUN chmod +x /root/run.sh
 RUN sed -i 's/LoadModule/#LoadModule/g' /app/templete/apache/*.conf
 RUN ln -s /usr/sbin/apache2 /usr/sbin/httpd
 RUN mkdir -p /etc/httpd/conf.d && \
+    touch /etc/httpd/conf.d/subversion.conf && \
     mv /etc/apache2/mods-enabled/dav_svn.conf /etc/apache2/mods-enabled/dav_svn.conf.bak && \
-    ln -s /etc/httpd/conf.d/subversion.conf /etc/apache2/mods-enabled/dav_svn.conf && \
+    ln -s /etc/httpd/conf.d/subversion.conf /etc/apache2/mods-enabled/dav_svn.conf
 
 
 RUN echo 'export APACHE_RUN_USER=www-data' >> /etc/profile
