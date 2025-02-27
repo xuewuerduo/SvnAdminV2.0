@@ -14,15 +14,6 @@
                 AllowOverride All
         </Directory>
 
-        Alias /phpmyadmin /var/www/phpmyadmin
-        <Directory /phpmyadmin>
-                Options Indexes FollowSymLinks MultiViews
-                # To make wordpress .htaccess work
-                AllowOverride All
-                Order allow,deny
-                allow from all
-        </Directory>
-
         ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/
         <Directory "/usr/lib/cgi-bin">
                 AllowOverride None
