@@ -33,7 +33,7 @@ jobs:
           context: .
           push: true
           #在这里通过加入需要编译的平台和前面配好的QEMU，buildx来达到多平台编译
-          platforms: linux/amd64,linux/arm64,linux/arm/V7,linux/arm/V8
+          platforms: linux/amd64,linux/arm64
           tags: xuewuerduo/svnadmin2:latest
       - name: Update repo description
         uses: peter-evans/dockerhub-description@v4
@@ -42,4 +42,4 @@ jobs:
           password: ${{ secrets.DOCKER_TOKEN }}
           repository: xuewuerduo/SvnAdminV2.0
           short-description: '仅对witersen大佬的SvnAdminV2.0项目进行自动化docker镜像打包，生成amd64、arm64、arm/v7、arm/v8 版本镜像，感谢大佬的付出'
-          readme-file: 'README.md'
+          readme-filepath: 'README.md'
