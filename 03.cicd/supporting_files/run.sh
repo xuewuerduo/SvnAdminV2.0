@@ -23,10 +23,10 @@ export APACHE_ROOT=/app
 echo "Editing APACHE_RUN_GROUP environment variable"
 sed -i "s/export APACHE_RUN_GROUP=www-data/export APACHE_RUN_GROUP=staff/" /etc/apache2/envvars
 
-if [ -n "$APACHE_ROOT" ];then
-    echo "Linking /var/www/html to the Apache root"
-    rm -f /var/www/html && ln -s "/app/${APACHE_ROOT}" /var/www/html
-fi
+#if [ -n "$APACHE_ROOT" ];then
+#    echo "Linking /var/www/html to the Apache root"
+#    rm -f /var/www/html && ln -s "/app/${APACHE_ROOT}" /var/www/html
+#fi
 
 
 
@@ -56,7 +56,7 @@ rm -rf /run/apache2
 mkdir -p /run/apache2
 #chown -R apache:apache /run/httpd
 chown -R www-data:www-data /run/httpd
-#/usr/sbin/apache2
+service apache2 start
 /usr/sbin/php-fpm
 
 
