@@ -114,16 +114,14 @@ RUN mkdir -p /etc/httpd/conf.d && \
     ln -s /etc/httpd/conf.d/subversion.conf /etc/apache2/mods-enabled/dav_svn.conf && \
 
 
-RUN echo export APACHE_RUN_USER=www-data >> /etc/profile && \
-    echo export APACHE_RUN_GROUP=staff >> /etc/profile && \
-    echo export APACHE_PID_FILE=/var/run/apache2/apache2.pid >> /etc/profile && \
-    echo export APACHE_RUN_DIR=/var/run/apache2 >> /etc/profile && \
-    echo export APACHE_LOCK_DIR=/var/lock/apache2 >> /etc/profile && \
-        # Only /var/log/apache2 is handled by /etc/logrotate.d/apache2.
-    echo export APACHE_LOG_DIR=/var/log/apache2 >> /etc/profile && \
-        # The locale used by some modules like mod_dav
-    echo export LANG=C >> /etc/profile && \
-    echo export LANG >> /etc/profile
+RUN echo 'export APACHE_RUN_USER=www-data' >> /etc/profile
+RUN echo 'export APACHE_RUN_GROUP=staff' >> /etc/profile
+RUN echo 'export APACHE_PID_FILE=/var/run/apache2/apache2.pid' >> /etc/profile
+RUN echo 'export APACHE_RUN_DIR=/var/run/apache2' >> /etc/profile
+RUN echo 'export APACHE_LOCK_DIR=/var/lock/apache2' >> /etc/profile
+RUN echo 'export APACHE_LOG_DIR=/var/log/apache2' >> /etc/profile
+RUN echo 'export LANG=C' >> /etc/profile
+RUN echo 'export LANG' >> /etc/profile
 
 RUN source /etc/profile
 
