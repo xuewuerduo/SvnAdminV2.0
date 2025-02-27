@@ -111,8 +111,22 @@ RUN sed -i 's/LoadModule/#LoadModule/g' /app/templete/apache/*.conf
 RUN ln -s /usr/sbin/apache2 /usr/sbin/httpd
 RUN mkdir -p /etc/httpd/conf.d && \
     mv /etc/apache2/mods-enabled/dav_svn.conf /etc/apache2/mods-enabled/dav_svn.conf.bak && \
-    ln -s /etc/httpd/conf.d/subversion.conf /etc/apache2/mods-enabled/dav_svn.conf
+    ln -s /etc/httpd/conf.d/subversion.conf /etc/apache2/mods-enabled/dav_svn.conf && \
+    'apache_modules_path' => '/etc/httpd/modules/',/usr/lib/apache2/modules/
 
+RUN echo export SUFFIX= >> /etc/profile &&  \
+    echo export APACHE_RUN_USER=www-data >> /etc/profile && \
+    echo export APACHE_RUN_GROUP=staff >> /etc/profile && \
+    echo export APACHE_PID_FILE=/var/run/apache2/apache2.pid >> /etc/profile && \
+    echo export APACHE_RUN_DIR=/var/run/apache2 >> /etc/profile && \
+    echo export APACHE_LOCK_DIR=/var/lock/apache2 >> /etc/profile && \
+        # Only /var/log/apache2 is handled by /etc/logrotate.d/apache2.
+    echo export APACHE_LOG_DIR=/var/log/apache2 >> /etc/profile && \
+        # The locale used by some modules like mod_dav
+    echo export LANG=C >> /etc/profile && \
+    echo export LANG >> /etc/profile
+
+RUN source /etc/profile
 
 EXPOSE 80
 EXPOSE 443
