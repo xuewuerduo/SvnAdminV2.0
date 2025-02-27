@@ -114,7 +114,6 @@ RUN mkdir -p /etc/httpd/conf.d && \
     mv /etc/apache2/mods-enabled/dav_svn.conf /etc/apache2/mods-enabled/dav_svn.conf.bak && \
     ln -s /etc/httpd/conf.d/subversion.conf /etc/apache2/mods-enabled/dav_svn.conf
 
-
 RUN echo 'export APACHE_RUN_USER=www-data' >> /etc/profile
 RUN echo 'export APACHE_RUN_GROUP=staff' >> /etc/profile
 RUN echo 'export APACHE_PID_FILE=/var/run/apache2/apache2.pid' >> /etc/profile
@@ -124,7 +123,8 @@ RUN echo 'export APACHE_LOG_DIR=/var/log/apache2' >> /etc/profile
 RUN echo 'export LANG=C' >> /etc/profile
 RUN echo 'export LANG' >> /etc/profile
 
-#RUN source /etc/profile
+#信息统计页错误处理
+ADD 03.cicd/supporting_files/Statistics.php /app/app/service/Statistics.php
 
 EXPOSE 80
 EXPOSE 443
