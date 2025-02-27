@@ -78,6 +78,7 @@ RUN ln -s /usr/sbin/php-fpm8.0 /usr/sbin/php-fpm \
     mkdir -p /app && rm -fr /var/www/html &&  \
     ln -s /app /var/www/html
 
+
 # 配置文件
 
 RUN mkdir /root/svnadmin_web
@@ -103,6 +104,15 @@ RUN cd /root/svnadmin_web && \
 ADD 02.php/ /app
 ADD 03.cicd/supporting_files/run.sh /root/run.sh
 RUN chmod +x /root/run.sh
+
+
+#修复httpd切换为apache2导致的程序问题
+RUN sed -i 's/LoadModule/#LoadModule/g' /app/templete/apache/*.conf
+RUN ln -s /usr/sbin/apache2 /usr/sbin/httpd
+RUN mkdir -p /etc/httpd/conf.d && \
+    mv /etc/apache2/mods-enabled/dav_svn.conf /etc/apache2/mods-enabled/dav_svn.conf.bak && \
+    ln -s /etc/httpd/conf.d/subversion.conf /etc/apache2/mods-enabled/dav_svn.conf
+
 
 EXPOSE 80
 EXPOSE 443
