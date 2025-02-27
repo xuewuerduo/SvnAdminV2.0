@@ -71,11 +71,12 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" &&
 ADD 03.cicd/supporting_files/apache_default /etc/apache2/sites-available/000-default.conf
 RUN a2enmod rewrite
 
-# Configure /app folder with sample app
-RUN mkdir -p /app && rm -fr /var/www/html && ln -s /app /var/www/html
+
 #ADD app/ /app
 RUN ln -s /usr/sbin/php-fpm8.0 /usr/sbin/php-fpm \
-    && mkdir -p /run/php
+    && mkdir -p /run/php && \
+    mkdir -p /app && rm -fr /var/www/html &&  \
+    ln -s /app /var/www/html
 
 # 配置文件
 
