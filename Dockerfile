@@ -124,7 +124,7 @@ RUN echo 'export APACHE_LOG_DIR=/var/log/apache2' >> /etc/profile
 RUN echo 'export LANG=C' >> /etc/profile
 RUN echo 'export LANG' >> /etc/profile
 
-RUN source /etc/profile
+#RUN source /etc/profile
 
 EXPOSE 80
 EXPOSE 443
