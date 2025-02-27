@@ -114,8 +114,7 @@ RUN mkdir -p /etc/httpd/conf.d && \
     ln -s /etc/httpd/conf.d/subversion.conf /etc/apache2/mods-enabled/dav_svn.conf && \
     'apache_modules_path' => '/etc/httpd/modules/',/usr/lib/apache2/modules/
 
-RUN echo export SUFFIX= >> /etc/profile &&  \
-    echo export APACHE_RUN_USER=www-data >> /etc/profile && \
+RUN echo export APACHE_RUN_USER=www-data >> /etc/profile && \
     echo export APACHE_RUN_GROUP=staff >> /etc/profile && \
     echo export APACHE_PID_FILE=/var/run/apache2/apache2.pid >> /etc/profile && \
     echo export APACHE_RUN_DIR=/var/run/apache2 >> /etc/profile && \
