@@ -41,5 +41,5 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
           repository: xuewuerduo/SvnAdminV2.0
-          short-description: '本镜像仅对witersen大佬的SvnAdminV2.0项目进行自动化docker镜像打包，自动构建生成amd64、arm64、arm/v7、arm/v8版本镜像，作为对大佬仓库的补充，对于大佬的代码无改动,再次感谢大佬的付出'
-          readme-file: './README.md'
+          short-description: '仅对witersen大佬的SvnAdminV2.0项目进行自动化docker镜像打包，生成amd64、arm64、arm/v7、arm/v8 版本镜像，感谢大佬的付出'
+          readme-file: 'README.md'
