@@ -35,7 +35,6 @@ sed -i 's/^Listen .*/Listen 0.0.0.0:80/' /etc/apache2/ports.conf
 
 source /etc/profile
 
-/usr/sbin/php-fpm
 
 /usr/bin/svnserve --daemon --pid-file=/home/svnadmin/svnserve.pid -r '/home/svnadmin/rep/' --config-file '/home/svnadmin/svnserve.conf' --log-file '/home/svnadmin/logs/svnserve.log' --listen-port 3690 --listen-host 0.0.0.0
 
@@ -54,15 +53,11 @@ chmod 777 /home/svnadmin/sasl/saslauthd.pid
 
 rm -rf /run/apache2
 mkdir -p /run/apache2
-#chown -R apache:apache /run/httpd
-chown -R www-data:www-data /run/httpd
-service apache2 start
+chown -R www-data:www-data /run/apache2
+source /etc/apache2/envvars
+/usr/sbin/apache2
 /usr/sbin/php-fpm
-
 
 while [[ true ]]; do
     sleep 1
 done
-
-echo "Starting supervisord"
-exec supervisord -n
