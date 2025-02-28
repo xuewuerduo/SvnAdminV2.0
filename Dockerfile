@@ -1,5 +1,5 @@
-#FROM phusion/baseimage:focal-1.1.0
-FROM ubuntu:24.04
+FROM phusion/baseimage:jammy-1.0.4
+#FROM ubuntu:24.04
 
 MAINTAINER xuewuerduo <xuewuerduo@163.com>
 ENV REFRESHED_AT 2025-02-26
