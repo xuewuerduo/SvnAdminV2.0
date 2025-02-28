@@ -51,10 +51,10 @@ RUN LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php && \
 
 
 # Tweaks to give Apache/PHP write permissions to the app
-RUN usermod -u ${BOOT2DOCKER_ID} www-data && \
+RUN usermod -u 1000 www-data && \
     usermod -G staff www-data && \
-    groupmod -g $(($BOOT2DOCKER_GID + 10000)) $(getent group $BOOT2DOCKER_GID | cut -d: -f1) && \
-    groupmod -g ${BOOT2DOCKER_GID} staff
+    groupmod -g $((50 + 10000)) $(getent group 50 | cut -d: -f1) && \
+    groupmod -g 50 staff
 
 
 # Add image configuration and scripts
