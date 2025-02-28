@@ -31,11 +31,6 @@ ENV PHP_POST_MAX_SIZE 1024M
 # 安装 packages
 ENV DEBIAN_FRONTEND noninteractive
 
-#安装基础工具
-RUN apt-get update && \
-    apt-get -y upgrade && \
-    apt-get -y install software-properties-common curl
-
 #RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
 RUN LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php && \
   apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4F4EA0AAE5267A6C && \
@@ -51,10 +46,10 @@ RUN LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php && \
 
 
 # Tweaks to give Apache/PHP write permissions to the app
-#RUN usermod -u 1000 www-data && \
-#    usermod -G staff www-data && \
-#    groupmod -g $((50 + 10000)) $(getent group 50 | cut -d: -f1) && \
-#    groupmod -g 50 staff
+RUN usermod -u 1000 www-data && \
+    usermod -G staff www-data && \
+    groupmod -g $((50 + 10000)) $(getent group 50 | cut -d: -f1) && \
+    groupmod -g 50 staff
 
 
 # Add image configuration and scripts
