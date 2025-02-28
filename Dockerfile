@@ -34,9 +34,9 @@ ENV DEBIAN_FRONTEND noninteractive
 #安装基础工具
 RUN apt update && \
     apt -y upgrade && \
-    apt install -y software-properties-common curl
+    apt install -y software-properties-common curl bash
 
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
 RUN LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php && \
   apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4F4EA0AAE5267A6C && \
   add-apt-repository ppa:ondrej/apache2 -y && \
