@@ -32,21 +32,21 @@ ENV PHP_POST_MAX_SIZE 1024M
 ENV DEBIAN_FRONTEND noninteractive
 
 #安装基础工具
-RUN apt update && \
-    apt -y upgrade && \
-    apt install -y software-properties-common curl bash
+RUN apt-get update && \
+    apt-get -y upgrade && \
+    apt-get install -y software-properties-common curl bash
 
-RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
 RUN LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php && \
   apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4F4EA0AAE5267A6C && \
   add-apt-repository ppa:ondrej/apache2 -y && \
-  apt update && \
-  apt -y upgrade && \
-  apt -y install postfix python3-setuptools wget git apache2 php${PHP_VERSION}-xdebug libapache2-mod-php${PHP_VERSION} php${PHP_VERSION}-ldap php${PHP_VERSION}-sqlite3 php${PHP_VERSION}-fpm php${PHP_VERSION}-mysql pwgen php${PHP_VERSION}-apcu php${PHP_VERSION}-gd php${PHP_VERSION}-xml php${PHP_VERSION}-mbstring zip unzip php${PHP_VERSION}-zip curl php${PHP_VERSION}-curl && \
-  apt -y install subversion libapache2-mod-svn subversion-tools libsvn-dev nodejs passwd && \
-  apt -y install libsasl2-modules-gssapi-mit at sasl2-bin uuid-dev uuid-runtime && \
-  apt -y autoremove && \
-  apt -y clean && \
+  apt-get update && \
+  apt-get -y upgrade && \
+  apt-get -y install postfix python3-setuptools wget git apache2 php${PHP_VERSION}-xdebug libapache2-mod-php${PHP_VERSION} php${PHP_VERSION}-ldap php${PHP_VERSION}-sqlite3 php${PHP_VERSION}-fpm php${PHP_VERSION}-mysql pwgen php${PHP_VERSION}-apcu php${PHP_VERSION}-gd php${PHP_VERSION}-xml php${PHP_VERSION}-mbstring zip unzip php${PHP_VERSION}-zip curl php${PHP_VERSION}-curl && \
+  apt-get -y install subversion libapache2-mod-svn subversion-tools libsvn-dev nodejs passwd && \
+  apt-get -y install libsasl2-modules-gssapi-mit at sasl2-bin uuid-dev uuid-runtime && \
+  apt-get -y autoremove && \
+  apt-get -y clean && \
   echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
 
@@ -56,10 +56,6 @@ RUN LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php && \
 #    groupmod -g $(($BOOT2DOCKER_GID + 10000)) $(getent group $BOOT2DOCKER_GID | cut -d: -f1) && \
 #    groupmod -g ${BOOT2DOCKER_GID} staff
 
-## 安装 supervisor 4
-#RUN curl -L https://pypi.io/packages/source/s/supervisor/supervisor-${SUPERVISOR_VERSION}.tar.gz | tar xvz && \
-#  cd supervisor-${SUPERVISOR_VERSION}/ && \
-#  python3 setup.py install
 
 # Add image configuration and scripts
 ADD 03.cicd/supporting_files/start-apache2.sh /start-apache2.sh
