@@ -33,8 +33,8 @@ ENV DEBIAN_FRONTEND noninteractive
 
 #安装基础工具
 RUN apt-get update && \
-    apt-get -y upgrade
-    #apt-get install -y software-properties-common curl bash
+    apt-get -y upgrade && \
+    apt-get install -y software-properties-common curl bash
 
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash
 RUN LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php && \
