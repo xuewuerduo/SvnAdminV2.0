@@ -49,10 +49,10 @@ RUN LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php && \
 
 
 # Tweaks to give Apache/PHP write permissions to the app
-RUN usermod -u ${BOOT2DOCKER_ID} www-data && \
-    usermod -G staff www-data && \
-    groupmod -g $(($BOOT2DOCKER_GID + 10000)) $(getent group $BOOT2DOCKER_GID | cut -d: -f1) && \
-    groupmod -g ${BOOT2DOCKER_GID} staff
+#RUN usermod -u ${BOOT2DOCKER_ID} www-data && \
+#    usermod -G staff www-data && \
+#    groupmod -g $(($BOOT2DOCKER_GID + 10000)) $(getent group $BOOT2DOCKER_GID | cut -d: -f1) && \
+#    groupmod -g ${BOOT2DOCKER_GID} staff
 
 ## 安装 supervisor 4
 #RUN curl -L https://pypi.io/packages/source/s/supervisor/supervisor-${SUPERVISOR_VERSION}.tar.gz | tar xvz && \
