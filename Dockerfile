@@ -34,9 +34,9 @@ ENV DEBIAN_FRONTEND noninteractive
 #安装基础工具
 RUN apt-get update && \
     apt-get -y upgrade && \
-    apt-get install -y software-properties-common curl bash
+    apt-get -y install software-properties-common curl bash passwd
 
-RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
+#RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
 RUN LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php && \
   apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4F4EA0AAE5267A6C && \
   add-apt-repository ppa:ondrej/apache2 -y && \
@@ -51,10 +51,10 @@ RUN LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php && \
 
 
 # Tweaks to give Apache/PHP write permissions to the app
-#RUN usermod -u ${BOOT2DOCKER_ID} www-data && \
-#    usermod -G staff www-data && \
-#    groupmod -g $(($BOOT2DOCKER_GID + 10000)) $(getent group $BOOT2DOCKER_GID | cut -d: -f1) && \
-#    groupmod -g ${BOOT2DOCKER_GID} staff
+RUN usermod -u ${BOOT2DOCKER_ID} www-data && \
+    usermod -G staff www-data && \
+    groupmod -g $(($BOOT2DOCKER_GID + 10000)) $(getent group $BOOT2DOCKER_GID | cut -d: -f1) && \
+    groupmod -g ${BOOT2DOCKER_GID} staff
 
 
 # Add image configuration and scripts
