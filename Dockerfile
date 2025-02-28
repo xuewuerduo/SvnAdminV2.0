@@ -47,10 +47,10 @@ RUN LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php && \
   apt-get -y clean && \
   echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
-# 安装 supervisor 4
-RUN curl -L https://pypi.io/packages/source/s/supervisor/supervisor-${SUPERVISOR_VERSION}.tar.gz | tar xvz && \
-  cd supervisor-${SUPERVISOR_VERSION}/ && \
-  python3 setup.py install
+## 安装 supervisor 4
+#RUN curl -L https://pypi.io/packages/source/s/supervisor/supervisor-${SUPERVISOR_VERSION}.tar.gz | tar xvz && \
+#  cd supervisor-${SUPERVISOR_VERSION}/ && \
+#  python3 setup.py install
 
 # Add image configuration and scripts
 ADD 03.cicd/supporting_files/start-apache2.sh /start-apache2.sh
@@ -114,7 +114,6 @@ RUN mkdir -p /etc/httpd/conf.d && \
     mv /etc/apache2/mods-enabled/dav_svn.conf /etc/apache2/mods-enabled/dav_svn.conf.bak && \
     ln -s /etc/httpd/conf.d/subversion.conf /etc/apache2/mods-enabled/dav_svn.conf
 
-
 RUN echo 'export APACHE_RUN_USER=www-data' >> /etc/profile
 RUN echo 'export APACHE_RUN_GROUP=staff' >> /etc/profile
 RUN echo 'export APACHE_PID_FILE=/var/run/apache2/apache2.pid' >> /etc/profile
@@ -124,7 +123,8 @@ RUN echo 'export APACHE_LOG_DIR=/var/log/apache2' >> /etc/profile
 RUN echo 'export LANG=C' >> /etc/profile
 RUN echo 'export LANG' >> /etc/profile
 
-RUN source /etc/profile
+#信息统计页错误处理
+ADD 03.cicd/supporting_files/Statistics.php /app/app/service/Statistics.php
 
 EXPOSE 80
 EXPOSE 443
