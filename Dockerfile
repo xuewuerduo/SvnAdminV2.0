@@ -43,7 +43,7 @@ RUN LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php && \
   apt-get update && \
   apt-get -y upgrade && \
   apt-get -y install postfix python3-setuptools wget git apache2 php${PHP_VERSION}-xdebug libapache2-mod-php${PHP_VERSION} php${PHP_VERSION}-ldap php${PHP_VERSION}-sqlite3 php${PHP_VERSION}-fpm php${PHP_VERSION}-mysql pwgen php${PHP_VERSION}-apcu php${PHP_VERSION}-gd php${PHP_VERSION}-xml php${PHP_VERSION}-mbstring zip unzip php${PHP_VERSION}-zip curl php${PHP_VERSION}-curl && \
-  apt-get -y install subversion libapache2-mod-svn subversion-tools libsvn-dev nodejs passwd && \
+  apt-get -y install subversion libapache2-mod-svn subversion-tools libsvn-dev npm passwd && \
   apt-get -y install libsasl2-modules-gssapi-mit at sasl2-bin uuid-dev uuid-runtime && \
   apt-get -y autoremove && \
   apt-get -y clean && \
