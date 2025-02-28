@@ -23,179 +23,159 @@ class Statistics extends Base
      * CPU使用率
      * 内存使用率
      */
-    public function GetLoadInfo()
-    {
-        /**
-         * ----------1、负载计算开始----------
-         */
-        $loadavgArray = sys_getloadavg();
+    public function GetLoadInfo() {
+        $data = ['load' => [], 'cpu' => [], 'mem' => []];
 
-        // 获取CPU总核数（逻辑处理器数量）
-        $cpuInfo = file_get_contents('/proc/cpuinfo');
-        $cpuCount = substr_count($cpuInfo, 'processor'); // 更改为统计processor条目
+        try {
+            // 统一获取CPU核心数
+            $cpuCount = function_exists('shell_exec') ? (int)shell_exec('nproc --all') : 1;
+            $cpuCount = max($cpuCount, 1);
 
-        // 一分钟平均负载 / CPU核数 * 100，超过100则设为100
-        $percent = round(($loadavgArray[0] / $cpuCount) * 100, 1);
-        if ($percent > 100) {
-            $percent = 100;
+            /**
+             * 1. 负载计算
+             */
+            $loadavgArray = sys_getloadavg();
+            if (empty($loadavgArray)) throw new Exception("sys_getloadavg failed");
+
+            $loadPercent = round(($loadavgArray[0] / $cpuCount) * 100, 1);
+            $data['load'] = [
+                'cpuLoad15Min' => $loadavgArray[2],
+                'cpuLoad5Min' => $loadavgArray[1],
+                'cpuLoad1Min' => $loadavgArray[0],
+                'percent' => min($loadPercent, 200),
+                'color' => $this->funGetColor($loadPercent)['color'],
+                'title' => $this->funGetColor($loadPercent)['title']
+            ];
+
+            /**
+             * 2. CPU利用率计算
+             */
+            // 第一次采样
+            $stat1 = file('/proc/stat');
+            if (empty($stat1)) throw new Exception("Cannot read /proc/stat");
+            $times1 = preg_split('/\s+/', trim($stat1[0]));
+            array_shift($times1); // 移除"cpu"标识
+            $total1 = array_sum(array_map('intval', $times1));
+            $idle1 = $times1[3] + ($times1[4] ?? 0); // idle + iowait
+
+            sleep(1);
+
+            // 第二次采样
+            $stat2 = file('/proc/stat');
+            $times2 = preg_split('/\s+/', trim($stat2[0]));
+            array_shift($times2);
+            $total2 = array_sum(array_map('intval', $times2));
+            $idle2 = $times2[3] + ($times2[4] ?? 0);
+
+            // 计算利用率
+            $totalDiff = $total2 - $total1;
+            $idleDiff = $idle2 - $idle1;
+            $cpuTotalUsage = ($totalDiff > 0) ? 100 * (1 - $idleDiff / $totalDiff) : 0;
+            $cpuAvgUsage = round($cpuTotalUsage / $cpuCount, 1);
+
+            /**
+             * 3. CPU硬件信息
+             */
+            $cpuInfo = $this->parseCpuInfo();
+            $data['cpu'] = [
+                'percent' => max(0, min($cpuAvgUsage, 100)),
+                'models' => array_unique(array_column($cpuInfo['physical'], 'model')),
+                'cpuPhysical' => count($cpuInfo['physical']), //物理CPU个数
+                'cores' => array_sum(array_column($cpuInfo['physical'], 'cores')), //物理CPU总核心数
+                'logical' => count($cpuInfo['logical']),
+                'hyperthreading' => ($cpuInfo['physical'][0]['siblings'] ?? 0) > ($cpuInfo['physical'][0]['cores'] ?? 1),
+                'topology' => $cpuInfo['physical']
+            ];
+
+            /**
+             * 4. 内存计算
+             */
+            $meminfos = $this->parseMemInfo();
+            $memTotal = $meminfos['MemTotal'] ?? 0;
+            $memUsed = $memTotal
+                - ($meminfos['MemFree'] ?? 0)
+                - ($meminfos['Buffers'] ?? 0)
+                - ($meminfos['Cached'] ?? 0)
+                - ($meminfos['SReclaimable'] ?? 0);
+
+            $memPercent = $memTotal > 0 ? round($memUsed / $memTotal * 100, 1) : 0;
+            $data['mem'] = [
+                'total' => round($memTotal / 1024, 1),   // MB
+                'used' => round($memUsed / 1024, 1),
+                'percent' => $memPercent,
+                'color' => $this->funGetColor($memPercent)['color']
+            ];
+
+            return message(200, 1, '成功', $data);
+        } catch (Exception $e) {
+            error_log("System Monitor Error: " . $e->getMessage());
+            return message(500, 0, '数据采集失败', null);
         }
+    }
 
-        $data['load'] = [
-            'cpuLoad15Min' => $loadavgArray[2],
-            'cpuLoad5Min' => $loadavgArray[1],
-            'cpuLoad1Min' => $loadavgArray[0],
-            'percent' => $percent,
-            'color' => funGetColor($percent)['color'],
-            'title' => funGetColor($percent)['title']
-        ];
+// 辅助方法：解析CPU信息
+    private function parseCpuInfo() {
+        $info = ['physical' => [], 'logical' => []];
+        $currentProc = -1;
 
-        /**
-         * ----------2、cpu利率用开始----------
-         */
-        // 获取第一次采样的 CPU 统计信息及时间
-        $procStat1 = @file_get_contents('/proc/stat');
-        if ($procStat1 === false) {
-            // 处理错误，例如记录日志或设置默认值
-            $data['cpuUsage'] = ['error' => 'Failed to read /proc/stat'];
-            return;
-        }
-
-        if (!preg_match('/^cpu\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)(?:\s+\d+)*/m', $procStat1, $matches1)) {
-            // 正则匹配失败处理
-            $data['cpuUsage'] = ['error' => 'Invalid /proc/stat format'];
-            return;
-        }
-        $totalCpuTime1 = array_sum(array_slice($matches1, 1, 8)); // 仅取前8个字段避免新字段干扰
-        $time1 = microtime(true);
-
-        // 等待采样间隔（至少1秒）
-        sleep(1);
-
-        // 获取第二次采样的 CPU 统计信息及时间
-        $procStat2 = @file_get_contents('/proc/stat');
-        if ($procStat2 === false) {
-            // 处理错误
-            $data['cpuUsage'] = ['error' => 'Failed to read /proc/stat'];
-            return;
-        }
-
-        if (!preg_match('/^cpu\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)(?:\s+\d+)*/m', $procStat2, $matches2)) {
-            // 正则匹配失败处理
-            $data['cpuUsage'] = ['error' => 'Invalid /proc/stat format'];
-            return;
-        }
-        $totalCpuTime2 = array_sum(array_slice($matches2, 1, 8));
-        $time2 = microtime(true);
-
-        // 计算实际时间差（秒）
-        $elapsed = max($time2 - $time1, 0.001); // 避免除零错误
-
-        // 计算 CPU 时间差
-        $totalDiff = $totalCpuTime2 - $totalCpuTime1;
-        if ($totalDiff <= 0) {
-            $cpuAvgUsage = 0; // 时间差异常时设为0%
-        } else {
-            $idleDiff = $matches2[4] - $matches1[4]; // 第4字段为idle时间
-            $cpuAvgUsage = 100 * (1 - ($idleDiff / $totalDiff));
-            $cpuAvgUsage = max(min(round($cpuAvgUsage, 1), 100), 0); // 限制在0-100%
-        }
-
-        $data['cpuUsage'] = [
-            'percent' => $cpuAvgUsage,
-            'color' => funGetColor($cpuAvgUsage)['color'],
-            'title' => funGetColor($cpuAvgUsage)['title']
-        ];
-
-        /**
-         * 解析CPU信息（支持多路CPU、超线程、异构架构）
-         */
-        $cpuModelArray = [];
-        $cpuPhysicalMap = [];  // 物理CPU映射表 [physical_id => cores]
-        $cpuProcessorTotal = 0;
-
-        // 按空行分割逻辑处理器块
-        $procCpuinfo = file_get_contents('/proc/cpuinfo');
-        $blocks = array_filter(explode("\n\n", trim($procCpuinfo)));
-
-        foreach ($blocks as $block) {
-            $cpuProcessorTotal++;  // 每个块对应一个逻辑处理器
-            $currentPhysicalId = null;
-            $currentModelName = null;
-            $currentCores = null;
-
-            // 解析块内字段
-            foreach (explode("\n", trim($block)) as $line) {
-                if (strpos($line, ':') === false) continue;
-                list($key, $value) = explode(':', $line, 2);
-                $key = trim($key);
-                $value = trim($value);
-
-                switch ($key) {
-                    case 'model name':
-                        $currentModelName = $value;
-                        break;
-                    case 'physical id':
-                        $currentPhysicalId = $value;
-                        break;
-                    case 'cpu cores':
-                        $currentCores = (int)$value;
-                        break;
-                }
-            }
-
-            // 处理单物理CPU场景（无physical id字段）
-            if ($currentPhysicalId === null) {
-                $currentPhysicalId = 0;  // 默认物理ID
-            }
-
-            // 记录物理CPU核心数（确保每个ID只记录一次）
-            if (!isset($cpuPhysicalMap[$currentPhysicalId])) {
-                $cpuPhysicalMap[$currentPhysicalId] = $currentCores ?? 0;
-            }
-
-            // 记录CPU型号（异构场景支持）
-            if ($currentModelName !== null && !in_array($currentModelName, $cpuModelArray)) {
-                $cpuModelArray[] = $currentModelName;
+        foreach (explode("\n", @file_get_contents('/proc/cpuinfo')) as $line) {
+            if (preg_match('/^processor\s*:\s*(\d+)/', $line, $match)) {
+                $currentProc = (int)$match[1];
+                $info['logical'][$currentProc] = [];
+            } elseif ($currentProc >= 0 && strpos($line, ':') !== false) {
+                list($k, $v) = explode(':', $line, 2);
+                $info['logical'][$currentProc][trim($k)] = trim($v);
             }
         }
 
-        // 统计指标
-        $cpuPhysical = count($cpuPhysicalMap);          // 物理CPU个数
-        $cpuCoreTotal = array_sum($cpuPhysicalMap);     // 总物理核心数
-        $cpuLogicalTotal = $cpuProcessorTotal;          // 逻辑处理器总数
+        // 分析物理CPU
+        foreach ($info['logical'] as $proc) {
+            if (!isset($proc['physical id'], $proc['cpu cores'])) continue;
 
-        $data['cpu'] = [
-            'models'         => $cpuModelArray,        // 型号列表（支持异构）
-            'physical_count' => $cpuPhysical,          // 物理CPU个数
-            'cores_total'    => $cpuCoreTotal,         // 总物理核心数
-            'logical_total'  => $cpuLogicalTotal,      // 逻辑处理器总数
-            'percent'        => round($cpuAvgUsage, 1),
-            'color'          => funGetColor($cpuAvgUsage)['color']
-        ];
+            $pid = $proc['physical id'];
+            if (!isset($info['physical'][$pid])) {
+                $info['physical'][$pid] = [
+                    'model' => $proc['model name'] ?? $proc['Processor'] ?? 'Unknown',
+                    'cores' => (int)$proc['cpu cores'],
+                    'siblings' => (int)($proc['siblings'] ?? 1)
+                ];
+            }
+        }
 
-        /**
-         * ----------4、内存计算开始----------
-         */
-        $meminfo = file_get_contents('/proc/meminfo');
+        return $info;
+    }
 
-        preg_match_all('/^([a-zA-Z()_0-9]+)\s*\:\s*([\d\.]+)\s*([a-zA-z]*)$/m', $meminfo, $meminfos);
+// 辅助方法：解析内存信息
+    private function parseMemInfo() {
+        $meminfo = [];
+        $content = @file_get_contents('/proc/meminfo');
 
-        $meminfos = array_combine($meminfos[1], $meminfos[2]);
-        $memTotal = (int)$meminfos['MemTotal'];
-        $memUsed = $memTotal - (int)$meminfos['MemFree'] - (int)$meminfos['Cached'] - (int)$meminfos['Buffers'] -  (int)$meminfos['SReclaimable'];
-        $memFree = $memTotal - $memUsed;
+        if ($content) {
+            preg_match_all('/^([a-zA-Z()_0-9]+)\s*:\s*([\d]+)\s*kB$/m', $content, $matches);
+            if (!empty($matches[1])) {
+                $meminfo = array_combine($matches[1], array_map('intval', $matches[2]));
+            }
+        }
 
-        $percent = round($memUsed / $memTotal * 100, 1);
+        // 确保必要字段存在
+        $required = ['MemTotal', 'MemFree', 'Buffers', 'Cached', 'SReclaimable'];
+        foreach ($required as $key) {
+            if (!isset($meminfo[$key])) $meminfo[$key] = 0;
+        }
 
-        $data['mem'] = [
-            'memTotal' => round($memTotal / 1024),
-            'memUsed' => round($memUsed / 1024),
-            'memFree' => round($memFree / 1024),
-            'percent' => $percent,
-            'color' => funGetColor($percent)['color']
-        ];
+        return $meminfo;
+    }
 
-        return message(200, 1, '成功', $data);
+// 颜色分级函数
+    private function funGetColor($percent) {
+        switch (true) {
+            case $percent <= 70:
+                return ['color' => '#67C23A', 'title' => '正常'];
+            case $percent <= 90:
+                return ['color' => '#E6A23C', 'title' => '警告'];
+            default:
+                return ['color' => '#F56C6C', 'title' => '严重'];
+        }
     }
 
     /**
