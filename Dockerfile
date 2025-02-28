@@ -1,4 +1,5 @@
-FROM phusion/baseimage:focal-1.1.0
+#FROM phusion/baseimage:focal-1.1.0
+FROM ubuntu:latest
 MAINTAINER xuewuerduo <xuewuerduo@163.com>
 ENV REFRESHED_AT 2025-02-26
 LABEL MAINTAINER = "www.witersen.com 2023-07-23"
