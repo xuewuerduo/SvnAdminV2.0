@@ -31,6 +31,7 @@ ENV PHP_POST_MAX_SIZE 1024M
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
+RUN apt-get install software-properties-common
 RUN LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php && \
   apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4F4EA0AAE5267A6C && \
   add-apt-repository ppa:ondrej/apache2 -y && \
