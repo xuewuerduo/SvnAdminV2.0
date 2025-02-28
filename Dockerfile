@@ -1,12 +1,10 @@
 #FROM phusion/baseimage:focal-1.1.0
-FROM ubuntu
+FROM ubuntu:24.04
 
 MAINTAINER xuewuerduo <xuewuerduo@163.com>
 ENV REFRESHED_AT 2025-02-26
 LABEL MAINTAINER = "www.witersen.com 2023-07-23"
 
-RUN apt-get update && \
-    apt-get -y upgrade
 
 # 时间同步
 ENV TZ=Asia/Shanghai \
@@ -33,8 +31,10 @@ ENV PHP_POST_MAX_SIZE 1024M
 # 安装 packages
 ENV DEBIAN_FRONTEND noninteractive
 
+#安装基础工具
+RUN apt install -y software-properties-common curl
+
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
-RUN apt install -y software-properties-common
 RUN LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php && \
   apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4F4EA0AAE5267A6C && \
   add-apt-repository ppa:ondrej/apache2 -y && \
