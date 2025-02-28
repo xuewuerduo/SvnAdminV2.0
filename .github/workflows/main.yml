@@ -41,5 +41,5 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
           repository: xuewuerduo/svnadmin2
-          short-description: "SvnAdminV2.0多架构Docker镜像(amd64/arm64/armv7/armv8)"
+          short-description: "SvnAdminV2.0多架构Docker镜像(amd64/arm64)"
           readme-filepath: 'README.md'
