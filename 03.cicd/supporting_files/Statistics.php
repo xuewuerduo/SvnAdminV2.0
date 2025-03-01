@@ -78,13 +78,14 @@ class Statistics extends Base
              */
             $cpuInfo = $this->parseCpuInfo();
             $data['cpu'] = [
-                'percent' => max(0, min($cpuAvgUsage, 100)),
+                'percent' => max(0, min($cpuAvgUsage, 100)), //使用率
                 'models' => array_unique(array_column($cpuInfo['physical'], 'model')),
                 'cpuPhysical' => count($cpuInfo['physical']), //物理CPU个数
-                'cores' => array_sum(array_column($cpuInfo['physical'], 'cores')), //物理CPU总核心数
-                'logical' => count($cpuInfo['logical']),
+                'cpuCore' => array_sum(array_column($cpuInfo['physical'], 'cores')), //物理CPU总核心数
+                'cpuProcessor' => count($cpuInfo['logical']),
                 'hyperthreading' => ($cpuInfo['physical'][0]['siblings'] ?? 0) > ($cpuInfo['physical'][0]['cores'] ?? 1),
-                'topology' => $cpuInfo['physical']
+                'topology' => $cpuInfo['physical'],
+                'color' => $this->funGetColor($loadPercent)['color']
             ];
 
             /**
@@ -97,11 +98,13 @@ class Statistics extends Base
                 - ($meminfos['Buffers'] ?? 0)
                 - ($meminfos['Cached'] ?? 0)
                 - ($meminfos['SReclaimable'] ?? 0);
+            $memFree = $memTotal - $memUsed;
 
             $memPercent = $memTotal > 0 ? round($memUsed / $memTotal * 100, 1) : 0;
             $data['mem'] = [
-                'total' => round($memTotal / 1024, 1),   // MB
-                'used' => round($memUsed / 1024, 1),
+                'memTotal' => round($memTotal / 1024, 1),   // MB
+                'memUsed' => round($memUsed / 1024, 1),
+                'memFree' => round($memFree / 1024),
                 'percent' => $memPercent,
                 'color' => $this->funGetColor($memPercent)['color']
             ];
