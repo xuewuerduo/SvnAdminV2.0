@@ -79,7 +79,7 @@ class Statistics extends Base
             $cpuInfo = $this->parseCpuInfo();
             $data['cpu'] = [
                 'percent' => max(0, min($cpuAvgUsage, 100)), //使用率
-                'models' => array_unique(array_column($cpuInfo['physical'], 'model')),
+                'cpu' => array_unique(array_column($cpuInfo['physical'], 'model')), //CPU信息
                 'cpuPhysical' => count($cpuInfo['physical']), //物理CPU个数
                 'cpuCore' => array_sum(array_column($cpuInfo['physical'], 'cores')), //物理CPU总核心数
                 'cpuProcessor' => count($cpuInfo['logical']),
@@ -210,12 +210,13 @@ class Statistics extends Base
                             'used' => $diskUsage['used'],
                             'avail' => $diskUsage['avail'],
                             'percent' => $diskUsage['percent'],
-                            'color' => funGetColor($diskUsage['percent'])['color']
+                            'color' => $this->funGetColor($diskUsage)['color']
                         ];
                     }
                 }
             }
         }
+
 
 
         return message(200, 1, '成功', $diskArray);
