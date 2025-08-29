@@ -3,90 +3,90 @@
     <Card :bordered="false" :dis-hover="true">
       <!-- SVNserve服务非正常状态提示 -->
       <Alert
-        v-if="formStatusSubversion.status == false"
-        type="error"
-        show-icon
-        >{{ formStatusSubversion.info }}</Alert
+          v-if="formStatusSubversion.status == false"
+          type="error"
+          show-icon
+      >{{ formStatusSubversion.info }}</Alert
       >
       <Row style="margin-bottom: 15px">
         <Col
-          type="flex"
-          justify="space-between"
-          :xs="21"
-          :sm="20"
-          :md="19"
-          :lg="18"
+            type="flex"
+            justify="space-between"
+            :xs="21"
+            :sm="20"
+            :md="19"
+            :lg="18"
         >
           <Button
-            icon="md-add"
-            type="primary"
-            ghost
-            @click="ModalCreateRep"
-            v-if="user_role_id == 1 || user_role_id == 3"
-            >新建仓库</Button
+              icon="md-add"
+              type="primary"
+              ghost
+              @click="ModalCreateRep"
+              v-if="user_role_id == 1 || user_role_id == 3"
+          >新建仓库</Button
           >
           <Tooltip
-            max-width="250"
-            content="该操作会扫描磁盘上的有效仓库列表"
-            placement="bottom"
-            :transfer="true"
-            v-if="user_role_id == 1 || user_role_id == 3"
+              max-width="250"
+              content="该操作会扫描磁盘上的有效仓库列表"
+              placement="bottom"
+              :transfer="true"
+              v-if="user_role_id == 1 || user_role_id == 3"
           >
             <Button
-              icon="ios-sync"
-              type="warning"
-              ghost
-              @click="GetRepList(true, true, false, false)"
-              >同步仓库列表</Button
+                icon="ios-sync"
+                type="warning"
+                ghost
+                @click="GetRepList(true, true, false, false)"
+            >同步仓库列表</Button
             >
           </Tooltip>
           <Tooltip
-            max-width="250"
-            content="该操作会扫描磁盘上的有效仓库列表，并批量读取每个仓库的体积和版本信息，为耗时操作"
-            placement="bottom"
-            :transfer="true"
-            v-if="user_role_id == 1 || user_role_id == 3"
+              max-width="250"
+              content="该操作会扫描磁盘上的有效仓库列表，并批量读取每个仓库的体积和版本信息，为耗时操作"
+              placement="bottom"
+              :transfer="true"
+              v-if="user_role_id == 1 || user_role_id == 3"
           >
             <Button
-              icon="ios-sync"
-              type="warning"
-              ghost
-              @click="GetRepList(true, true, true, true)"
-              >同步仓库信息</Button
+                icon="ios-sync"
+                type="warning"
+                ghost
+                @click="GetRepList(true, true, true, true)"
+            >同步仓库信息</Button
             >
           </Tooltip>
           <Tooltip
-            max-width="250"
-            content="同步才可获取最新权限列表"
-            placement="bottom"
-            :transfer="true"
-            v-if="user_role_id == 2"
+              max-width="250"
+              content="同步才可获取最新权限列表"
+              placement="bottom"
+              :transfer="true"
+              v-if="user_role_id == 2"
           >
             <Button
-              icon="ios-sync"
-              type="warning"
-              ghost
-              @click="GetSvnUserRepList(true)"
-              >同步列表</Button
+                icon="ios-sync"
+                type="warning"
+                ghost
+                @click="GetSvnUserRepList(true)"
+            >同步列表</Button
             >
           </Tooltip>
           <Tooltip
-            max-width="450"
-            content="不经意的配置可能会导致 authz 配置文件失效
+              max-width="450"
+              content="不经意的配置可能会导致 authz 配置文件失效
 如 svnserve 1.10 版本中为空分组授权仓库可能会导致配置失效等
 配置文件失效会导致用户端无法检出、浏览等正常操作
 因此可通过此工具在线检测 authz 配置文件有无问题
 此功能依赖 svnauthz-validate"
-            placement="bottom"
-            :transfer="true"
-            v-if="user_role_id == 1 || user_role_id == 3"
+              placement="bottom"
+              :transfer="true"
+              v-if="user_role_id == 1 || user_role_id == 3"
           >
             <Button
-              icon="ios-hammer-outline"
-              type="error"
-              ghost
-              @click="CheckAuthz"
-              >authz检测</Button
+                icon="ios-hammer-outline"
+                type="error"
+                ghost
+                @click="CheckAuthz"
+            >authz检测</Button
             >
           </Tooltip>
           <!-- <Tooltip
@@ -107,32 +107,32 @@
         </Col>
         <Col :xs="3" :sm="4" :md="5" :lg="6">
           <Input
-            search
-            enter-button
-            placeholder="通过SVN仓库名、备注搜索..."
-            @on-search="GetRepList()"
-            v-model="searchKeywordRep"
-            v-if="user_role_id == 1 || user_role_id == 3"
+              search
+              enter-button
+              placeholder="通过SVN仓库名、备注搜索..."
+              @on-search="GetRepList()"
+              v-model="searchKeywordRep"
+              v-if="user_role_id == 1 || user_role_id == 3"
           />
           <Input
-            search
-            enter-button
-            placeholder="通过SVN仓库名搜索..."
-            @on-search="GetSvnUserRepList()"
-            v-model="searchKeywordRep"
-            v-if="user_role_id == 2"
+              search
+              enter-button
+              placeholder="通过SVN仓库名搜索..."
+              @on-search="GetSvnUserRepList()"
+              v-model="searchKeywordRep"
+              v-if="user_role_id == 2"
           />
         </Col>
       </Row>
       <!-- 管理人员仓库列表 -->
       <Table
-        v-if="user_role_id == 1 || user_role_id == 3"
-        @on-sort-change="SortChangeRep"
-        border
-        :loading="loadingRep"
-        :columns="tableColumnRep"
-        :data="tableDataRep"
-        size="small"
+          v-if="user_role_id == 1 || user_role_id == 3"
+          @on-sort-change="SortChangeRep"
+          border
+          :loading="loadingRep"
+          :columns="tableColumnRep"
+          :data="tableDataRep"
+          size="small"
       >
         <template slot-scope="{ index }" slot="index">
           {{ pageSizeRep * (pageCurrentRep - 1) + index + 1 }}
@@ -145,7 +145,7 @@
             style="float: right"
             :color="row.loading_rep_rev ? '#ed4014' : '#808695'"
             @click="SyncRepRev(row.rep_name, index)"
-          />
+        />
         </template>
         <template slot-scope="{ row, index }" slot="rep_size">
           {{ row.rep_size
@@ -155,120 +155,121 @@
             style="float: right"
             :color="row.loading_rep_size ? '#ed4014' : '#808695'"
             @click="SyncRepSize(row.rep_name, index)"
-          />
+        />
         </template>
         <template slot-scope="{ row, index }" slot="rep_note">
           <Input
-            :border="false"
-            v-model="tableDataRep[index].rep_note"
-            @on-blur="UpdRepNote(index, row.rep_name)"
+              :border="false"
+              v-model="tableDataRep[index].rep_note"
+              @on-blur="UpdRepNote(index, row.rep_name)"
           />
         </template>
         <template slot-scope="{ row }" slot="repScan">
           <Button type="info" size="small" @click="ModalViewRep(row.rep_name)"
-            >浏览</Button
+          >浏览</Button
           >
         </template>
         <template slot-scope="{ row }" slot="repPri">
           <Button type="info" size="small" @click="ModalRepPri(row.rep_name)"
-            >配置</Button
+          >配置</Button
           >
         </template>
         <template slot-scope="{ row }" slot="repHooks">
           <Button type="info" size="small" @click="ModalRepHooks(row.rep_name)"
-            >编辑</Button
+          >编辑</Button
           >
         </template>
         <template slot-scope="{ row }" slot="action">
           <Button
-            type="success"
-            size="small"
-            @click="ModalRepAdvance(row.rep_name)"
-            >高级</Button
+              type="success"
+              size="small"
+              @click="ModalRepAdvance(row.rep_name)"
+          >高级</Button
           >
           <Button
-            type="warning"
-            size="small"
-            @click="ModalEditRepName(row.rep_name)"
-            >修改</Button
+              type="warning"
+              size="small"
+              @click="ModalEditRepName(row.rep_name)"
+          >修改</Button
           >
           <Button type="error" size="small" @click="DelRep(row.rep_name)"
-            >删除</Button
+          >删除</Button
           >
         </template>
       </Table>
       <!-- 用户仓库列表 -->
       <Table
-        v-if="user_role_id == 2"
-        @on-sort-change="SortChangeUserRep"
-        border
-        :loading="loadingUserRep"
-        :columns="tableColumnUserRep"
-        :data="tableDataUserRep"
-        size="small"
+          v-if="user_role_id == 2"
+          @on-sort-change="SortChangeUserRep"
+          border
+          :loading="loadingUserRep"
+          :columns="tableColumnUserRep"
+          :data="tableDataUserRep"
+          size="small"
       >
         <template slot-scope="{ index }" slot="index">
           {{ pageSizeUserRep * (pageCurrentUserRep - 1) + index + 1 }}
         </template>
         <template slot-scope="{ row }" slot="second_pri">
           <Button
-            :disabled="!row.second_pri"
-            type="info"
-            size="small"
-            @click="
+              :disabled="!row.second_pri"
+              type="info"
+              size="small"
+              @click="
               ModalRepPriUser(
                 row.rep_name,
                 row.svnn_user_pri_path_id,
-                row.pri_path
+                row.pri_path,
+                row.rep_note
               )
             "
-            >配置</Button
+          >配置</Button
           >
         </template>
         <template slot-scope="{ row }" slot="action">
           <Button
-            type="info"
-            size="small"
-            @click="ModalViewUserRep(row.rep_name, row.pri_path)"
-            >浏览</Button
+              type="info"
+              size="small"
+              @click="ModalViewUserRep(row.rep_name, row.pri_path)"
+          >浏览</Button
           >
           <Button
-            type="info"
-            size="small"
-            v-if="enableCheckout == 'http'"
-            @click="ModalViewUserRepRaw(row.raw_url)"
-            >原生浏览</Button
+              type="info"
+              size="small"
+              v-if="enableCheckout == 'http'"
+              @click="ModalViewUserRepRaw(row.raw_url)"
+          >原生浏览</Button
           >
         </template>
       </Table>
       <!-- 管理人员SVN仓库分页 -->
       <Card
-        :bordered="false"
-        :dis-hover="true"
-        v-if="user_role_id == 1 || user_role_id == 3"
+          :bordered="false"
+          :dis-hover="true"
+          v-if="user_role_id == 1 || user_role_id == 3"
       >
         <Page
-          v-if="totalRep != 0"
-          :total="totalRep"
-          :current="pageCurrentRep"
-          :page-size="pageSizeRep"
-          @on-page-size-change="PageSizeChangeRep"
-          @on-change="PageChangeRep"
-          size="small"
-          show-sizer
+            v-if="totalRep != 0"
+            :total="totalRep"
+            :current="pageCurrentRep"
+            :page-size="pageSizeRep"
+            @on-page-size-change="PageSizeChangeRep"
+            @on-change="PageChangeRep"
+            size="small"
+            show-sizer
         />
       </Card>
       <!-- 用户SVN仓库分页 -->
       <Card :bordered="false" :dis-hover="true" v-if="user_role_id == 2">
         <Page
-          v-if="totalUserRep != 0"
-          :total="totalUserRep"
-          :current="pageCurrentUserRep"
-          :page-size="pageSizeUserRep"
-          @on-page-size-change="PageSizeChangeUserRep"
-          @on-change="PageChangeUserRep"
-          size="small"
-          show-sizer
+            v-if="totalUserRep != 0"
+            :total="totalUserRep"
+            :current="pageCurrentUserRep"
+            :page-size="pageSizeUserRep"
+            @on-page-size-change="PageSizeChangeUserRep"
+            @on-change="PageChangeUserRep"
+            size="small"
+            show-sizer
         />
       </Card>
     </Card>
@@ -280,7 +281,7 @@
         </FormItem>
         <FormItem>
           <Alert type="warning" show-icon
-            >仓库名称只能包含中文、字母、数字、破折号、下划线、点，不能以点开头或结尾</Alert
+          >仓库名称只能包含中文、字母、数字、破折号、下划线、点，不能以点开头或结尾</Alert
           >
         </FormItem>
         <FormItem label="备注信息">
@@ -294,19 +295,19 @@
             </Radio>
             <Radio label="2">
               <Icon type="social-android"></Icon>
-              <span>指定结构的仓库(包含 "trunk" "branches" "tags" 文件夹)</span>
+              <span>指定模板结构的仓库</span>
             </Radio>
           </RadioGroup>
         </FormItem>
         <FormItem>
           <Button type="primary" @click="CreateRep" :loading="loadingCreateRep"
-            >确定</Button
+          >确定</Button
           >
         </FormItem>
       </Form>
       <div slot="footer">
         <Button type="primary" ghost @click="modalCreateRep = false"
-          >取消</Button
+        >取消</Button
         >
       </div>
     </Modal>
@@ -316,24 +317,24 @@
         <Col span="15">
           <Breadcrumb>
             <BreadcrumbItem
-              v-for="(item, index) in breadRepPath.name"
-              :key="index"
-              @click.native="ClickBreadGetRepCon(breadRepPath.path[index])"
-              >{{ item }}</BreadcrumbItem
+                v-for="(item, index) in breadRepPath.name"
+                :key="index"
+                @click.native="ClickBreadGetRepCon(breadRepPath.path[index])"
+            >{{ item }}</BreadcrumbItem
             >
           </Breadcrumb>
         </Col>
         <Col span="1"> </Col>
         <Col span="8">
           <Tooltip
-            style="width: 100%"
-            max-width="450"
-            :content="tempCheckout"
-            placement="bottom"
+              style="width: 100%"
+              max-width="450"
+              :content="tempCheckout"
+              placement="bottom"
           >
             <Input readonly v-model="tempCheckout">
               <Button slot="append" icon="md-copy" @click="CopyCheckout"
-                >复制</Button
+              >复制</Button
               >
             </Input>
           </Tooltip>
@@ -341,27 +342,27 @@
       </Row>
       <Card :bordered="true" :dis-hover="true">
         <Table
-          height="450"
-          highlight-row
-          :no-data-text="noDataTextRepCon"
-          :border="false"
-          :loading="loadingRepCon"
-          :show-header="false"
-          :columns="tableColumnRepCon"
-          :data="tableDataRepCon"
-          @on-row-click="ClickRowGetRepCon"
+            height="450"
+            highlight-row
+            :no-data-text="noDataTextRepCon"
+            :border="false"
+            :loading="loadingRepCon"
+            :show-header="false"
+            :columns="tableColumnRepCon"
+            :data="tableDataRepCon"
+            @on-row-click="ClickRowGetRepCon"
         >
           <template slot-scope="{ row }" slot="resourceType">
             <Icon
-              v-if="row.resourceType == 1"
-              size="20"
-              type="ios-document-outline"
+                v-if="row.resourceType == 1"
+                size="20"
+                type="ios-document-outline"
             />
             <Icon
-              v-if="row.resourceType == 2"
-              size="20"
-              color="#65a0d5"
-              type="ios-folder-open"
+                v-if="row.resourceType == 2"
+                size="20"
+                color="#65a0d5"
+                type="ios-folder-open"
             />
           </template>
         </Table>
@@ -372,13 +373,13 @@
     </Modal>
     <!-- 对话框-仓库钩子 -->
     <Modal
-      v-model="modalRepHooks"
-      :title="titleModalRepHooks"
-      class-name="hooks"
-      :draggable="true"
+        v-model="modalRepHooks"
+        :title="titleModalRepHooks"
+        class-name="hooks"
+        :draggable="true"
     >
       <Alert type="info" show-icon
-        >如果SVN客户端正在触发相关的钩子，则更新动作可能会持续阻塞或失败，直至客户端结束相关进程</Alert
+      >如果SVN客户端正在触发相关的钩子，则更新动作可能会持续阻塞或失败，直至客户端结束相关进程</Alert
       >
       <Tabs type="card">
         <TabPane label="仓库钩子">
@@ -388,8 +389,8 @@
               <Divider orientation="left" size="small">Commit</Divider>
               <ListItem>
                 <ListItemMeta
-                  description="Start-commit hook"
-                  v-if="formRepHooks.start_commit.hasFile"
+                    description="Start-commit hook"
+                    v-if="formRepHooks.start_commit.hasFile"
                 />
                 <ListItemMeta title="Start-commit hook" v-else />
                 <template slot="action">
@@ -401,16 +402,16 @@
                   </li>
                   <li>
                     <span
-                      @click="DelRepHook(formRepHooks.start_commit.fileName)"
-                      >移除</span
+                        @click="DelRepHook(formRepHooks.start_commit.fileName)"
+                    >移除</span
                     >
                   </li>
                 </template>
               </ListItem>
               <ListItem>
                 <ListItemMeta
-                  description="Pre-commit hook"
-                  v-if="formRepHooks.pre_commit.hasFile"
+                    description="Pre-commit hook"
+                    v-if="formRepHooks.pre_commit.hasFile"
                 />
                 <ListItemMeta title="Pre-commit hook" v-else />
                 <template slot="action">
@@ -422,15 +423,15 @@
                   </li>
                   <li>
                     <span @click="DelRepHook(formRepHooks.pre_commit.fileName)"
-                      >移除</span
+                    >移除</span
                     >
                   </li>
                 </template>
               </ListItem>
               <ListItem>
                 <ListItemMeta
-                  description="Post-commit hook"
-                  v-if="formRepHooks.post_commit.hasFile"
+                    description="Post-commit hook"
+                    v-if="formRepHooks.post_commit.hasFile"
                 />
                 <ListItemMeta title="Post-commit hook" v-else />
                 <template slot="action">
@@ -442,7 +443,7 @@
                   </li>
                   <li>
                     <span @click="DelRepHook(formRepHooks.post_commit.fileName)"
-                      >移除</span
+                    >移除</span
                     >
                   </li>
                 </template>
@@ -450,8 +451,8 @@
               <Divider orientation="left" size="small">Locks</Divider>
               <ListItem>
                 <ListItemMeta
-                  description="Pre-lock hook"
-                  v-if="formRepHooks.pre_lock.hasFile"
+                    description="Pre-lock hook"
+                    v-if="formRepHooks.pre_lock.hasFile"
                 />
                 <ListItemMeta title="Pre-lock hook" v-else />
                 <template slot="action">
@@ -463,15 +464,15 @@
                   </li>
                   <li>
                     <span @click="DelRepHook(formRepHooks.pre_lock.fileName)"
-                      >移除</span
+                    >移除</span
                     >
                   </li>
                 </template>
               </ListItem>
               <ListItem>
                 <ListItemMeta
-                  description="Post-lock hook"
-                  v-if="formRepHooks.post_lock.hasFile"
+                    description="Post-lock hook"
+                    v-if="formRepHooks.post_lock.hasFile"
                 />
                 <ListItemMeta title="Post-lock hook" v-else />
                 <template slot="action">
@@ -483,15 +484,15 @@
                   </li>
                   <li>
                     <span @click="DelRepHook(formRepHooks.post_lock.fileName)"
-                      >移除</span
+                    >移除</span
                     >
                   </li>
                 </template>
               </ListItem>
               <ListItem>
                 <ListItemMeta
-                  description="Pre-unlock hook"
-                  v-if="formRepHooks.pre_unlock.hasFile"
+                    description="Pre-unlock hook"
+                    v-if="formRepHooks.pre_unlock.hasFile"
                 />
                 <ListItemMeta title="Pre-unlock hook" v-else />
                 <template slot="action">
@@ -503,15 +504,15 @@
                   </li>
                   <li>
                     <span @click="DelRepHook(formRepHooks.pre_unlock.fileName)"
-                      >移除</span
+                    >移除</span
                     >
                   </li>
                 </template>
               </ListItem>
               <ListItem>
                 <ListItemMeta
-                  description="Post-unlock hook"
-                  v-if="formRepHooks.post_unlock.hasFile"
+                    description="Post-unlock hook"
+                    v-if="formRepHooks.post_unlock.hasFile"
                 />
                 <ListItemMeta title="Post-unlock hook" v-else />
                 <template slot="action">
@@ -523,70 +524,70 @@
                   </li>
                   <li>
                     <span @click="DelRepHook(formRepHooks.post_unlock.fileName)"
-                      >移除</span
+                    >移除</span
                     >
                   </li>
                 </template>
               </ListItem>
               <Divider orientation="left" size="small"
-                >Revision property change</Divider
+              >Revision property change</Divider
               >
               <ListItem>
                 <ListItemMeta
-                  description="Pre-reversion property change hook"
-                  v-if="formRepHooks.pre_revprop_change.hasFile"
+                    description="Pre-reversion property change hook"
+                    v-if="formRepHooks.pre_revprop_change.hasFile"
                 />
                 <ListItemMeta
-                  title="Pre-reversion property change hook"
-                  v-else
+                    title="Pre-reversion property change hook"
+                    v-else
                 />
                 <template slot="action">
                   <li>
                     <span @click="ModalStudyRepHook('pre_revprop_change')"
-                      >介绍</span
+                    >介绍</span
                     >
                   </li>
                   <li>
                     <span @click="ModalEditRepHook('pre_revprop_change')"
-                      >编辑</span
+                    >编辑</span
                     >
                   </li>
                   <li>
                     <span
-                      @click="
+                        @click="
                         DelRepHook(formRepHooks.pre_revprop_change.fileName)
                       "
-                      >移除</span
+                    >移除</span
                     >
                   </li>
                 </template>
               </ListItem>
               <ListItem>
                 <ListItemMeta
-                  description="Post-reversion property change hook"
-                  v-if="formRepHooks.post_revprop_change.hasFile"
+                    description="Post-reversion property change hook"
+                    v-if="formRepHooks.post_revprop_change.hasFile"
                 />
                 <ListItemMeta
-                  title="Post-reversion property change hook"
-                  v-else
+                    title="Post-reversion property change hook"
+                    v-else
                 />
                 <template slot="action">
                   <li>
                     <span @click="ModalStudyRepHook('post_revprop_change')"
-                      >介绍</span
+                    >介绍</span
                     >
                   </li>
                   <li>
                     <span @click="ModalEditRepHook('post_revprop_change')"
-                      >编辑</span
+                    >编辑</span
                     >
                   </li>
                   <li>
                     <span
-                      @click="
+                        @click="
                         DelRepHook(formRepHooks.post_revprop_change.fileName)
                       "
-                      >移除</span
+                    >移除</span
                     >
                   </li>
                 </template>
@@ -598,7 +599,7 @@
         </TabPane>
         <TabPane label="常用钩子">
           <Alert
-            >如需将自己常用的钩子显示在此处<br /><br />
+          >如需将自己常用的钩子显示在此处<br /><br />
             以新增 pre-commit 功能为例，操作步骤如下：<br /><br />
             1、在 /home/svnadmin/hooks/ 目录下创建任意名称的文件夹<br />
             2、创建文件 hookDescription 并写入此钩子的主要功能描述<br />
@@ -609,8 +610,8 @@
             <List :border="true">
               <ListItem v-for="(item, index) in recommendHooks" :key="index">
                 <ListItemMeta
-                  :title="item.hookName"
-                  :description="item.hookDescription"
+                    :title="item.hookName"
+                    :description="item.hookDescription"
                 />
                 <template slot="action">
                   <li>
@@ -624,154 +625,162 @@
       </Tabs>
       <div slot="footer">
         <Button type="primary" ghost @click="modalRepHooks = false"
-          >取消</Button
+        >取消</Button
         >
       </div>
     </Modal>
     <!-- 对话框-钩子信息介绍 -->
     <Modal
-      v-model="modalStudyRepHook"
-      :draggable="true"
-      :title="titleModalStudyRepHook"
+        v-model="modalStudyRepHook"
+        :draggable="true"
+        :title="titleModalStudyRepHook"
     >
       <Input
-        v-model="tempSelectRepHookTmpl"
-        readonly
-        :rows="15"
-        show-word-limit
-        type="textarea"
+          v-model="tempSelectRepHookTmpl"
+          readonly
+          :rows="15"
+          show-word-limit
+          type="textarea"
       />
       <div slot="footer">
         <Button type="primary" ghost @click="modalStudyRepHook = false"
-          >取消</Button
+        >取消</Button
         >
       </div>
     </Modal>
     <!-- 对话框-钩子文件编辑 -->
     <Modal
-      v-model="modalEditRepHook"
-      :draggable="true"
-      :title="titleModalEditRepHook"
+        v-model="modalEditRepHook"
+        :draggable="true"
+        :title="titleModalEditRepHook"
     >
       <Input
-        v-model="tempSelectRepHookCon"
-        :rows="15"
-        show-word-limit
-        type="textarea"
-        placeholder="具体介绍和语法可看钩子介绍"
+          v-model="tempSelectRepHookCon"
+          :rows="15"
+          show-word-limit
+          type="textarea"
+          placeholder="具体介绍和语法可看钩子介绍"
       />
       <div slot="footer">
         <Button type="primary" @click="UpdRepHook" :loading="loadingEditRepHook"
-          >应用</Button
+        >应用</Button
         >
       </div>
     </Modal>
     <!-- 对话框-常用钩子 -->
     <Modal v-model="modalRecommendHook" :draggable="true" title="常用钩子">
       <Input
-        v-model="tempSelectRepHookRecommend"
-        readonly
-        :rows="15"
-        show-word-limit
-        type="textarea"
+          v-model="tempSelectRepHookRecommend"
+          readonly
+          :rows="15"
+          show-word-limit
+          type="textarea"
       />
       <div slot="footer">
         <Button type="primary" ghost @click="modalRecommendHook = false"
-          >取消</Button
+        >取消</Button
         >
       </div>
     </Modal>
     <!-- 对话框-高级 -->
     <Modal
-      v-model="modalRepAdvance"
-      :draggable="true"
-      :title="titleModalRepAdvance"
+        v-model="modalRepAdvance"
+        :draggable="true"
+        :title="titleModalRepAdvance"
+        width=80%
     >
       <Tabs type="card" v-model="curTabRepAdvance" @on-click="ClickTabAdvance">
         <TabPane label="仓库属性" name="attribute">
           <Table
-            :show-header="false"
-            :columns="tableColumnRepDetail"
-            :data="tableDataRepDetail"
-            :loading="loadingRepDetail"
-            size="small"
-            height="350"
+              :show-header="false"
+              :columns="tableColumnRepDetail"
+              :data="tableDataRepDetail"
+              :loading="loadingRepDetail"
+              size="small"
+              height="350"
           >
             <template slot-scope="{ index }" slot="copy">
               <Button
-                icon="md-copy"
-                type="text"
-                @click="CopyRepDetail(index)"
+                  icon="md-copy"
+                  type="text"
+                  @click="CopyRepDetail(index)"
               ></Button>
             </template>
             <template
-              slot-scope="{ row }"
-              slot="uuid"
-              v-if="row.repKey == 'UUID' || row.repKey == 'uuid'"
+                slot-scope="{ row }"
+                slot="uuid"
+                v-if="row.repKey == 'UUID' || row.repKey == 'uuid'"
             >
               <Button type="primary" size="small" @click="ModalSetUUID()"
-                >重设</Button
+              >重设</Button
               >
             </template>
           </Table>
         </TabPane>
         <TabPane label="仓库备份" name="backup">
           <Alert type="error" show-icon v-if="!file.on"
-            >当前环境PHP未开启文件上传功能
+          >当前环境PHP未开启文件上传功能
           </Alert>
           <Row style="margin-bottom: 15px">
             <Col span="15">
               <Tooltip
-                max-width="250"
-                content="以svnadmin dump的方式加入后台任务进行备份"
-                placement="bottom"
-                :transfer="true"
+                  max-width="250"
+                  content="以svnadmin dump的方式加入后台任务进行备份"
+                  placement="bottom"
+                  :transfer="true"
               >
                 <Button
-                  type="primary"
-                  ghost
-                  icon="ios-cafe-outline"
-                  :loading="loadingRepDump"
-                  @click="SvnadminDump"
-                  >立即备份</Button
+                    type="primary"
+                    ghost
+                    icon="ios-cafe-outline"
+                    :loading="loadingRepDump"
+                    @click="SvnadminDump"
+                >立即备份</Button
                 >
               </Tooltip>
               <Button
-                type="primary"
-                ghost
-                icon="ios-cloud-upload-outline"
-                @click="ModalUploadBackup"
-                >上传备份</Button
+                  type="primary"
+                  ghost
+                  icon="ios-cloud-upload-outline"
+                  @click="ModalUploadBackup"
+              >上传备份</Button
               >
             </Col>
+            <div>
+              仅显示当前仓库备份
+              <Switch v-model="showOnlyCurrentRepBackups">当前仓库备份 / 全部备份>
+                <span slot="open">是</span>
+                <span slot="close">否</span>
+              </Switch>
+            </div>
           </Row>
           <Table
-            height="300"
-            border
-            :columns="tableColumnBackup"
-            :data="tableDataBackup"
-            size="small"
-            :loading="loadingRepBackupList"
+              height="300"
+              border
+              :columns="tableColumnBackup"
+              :data="tableDataBackup"
+              size="small"
+              :loading="loadingRepBackupList"
           >
             <template slot-scope="{ index, row }" slot="action">
               <Button
-                type="success"
-                size="small"
-                :loading="loadingLoadBackup[index]"
-                @click="SvnadminLoad(row.fileName, index)"
-                >恢复</Button
+                  type="success"
+                  size="small"
+                  :loading="loadingLoadBackup[index]"
+                  @click="SvnadminLoad(row.fileName, index)"
+              >恢复</Button
               >
               <Button
-                type="success"
-                size="small"
-                @click="DownloadRepBackup(row.fileUrl)"
-                >下载</Button
+                  type="success"
+                  size="small"
+                  @click="DownloadRepBackup(row.fileUrl)"
+              >下载</Button
               >
               <Button
-                type="error"
-                size="small"
-                @click="DelRepBackup(row.fileName)"
-                >删除</Button
+                  type="error"
+                  size="small"
+                  @click="DelRepBackup(row.fileName)"
+              >删除</Button
               >
             </template>
           </Table>
@@ -779,32 +788,41 @@
       </Tabs>
       <div slot="footer">
         <Button type="primary" ghost @click="modalRepAdvance = false"
-          >取消</Button
+        >取消</Button
         >
       </div>
     </Modal>
-    <!-- 对话框-编辑仓库名称 -->
+    <!-- 对话框-编辑仓库信息 -->
     <Modal
-      v-model="modalEditRepName"
-      :draggable="true"
-      :title="titleModalEditRepName"
+        v-model="modalEditRepName"
+        :draggable="true"
+        :title="titleModalEditRepName"
     >
       <Form :model="formRepEdit" :label-width="80">
         <FormItem label="仓库名称">
           <Input v-model="formRepEdit.new_rep_name"></Input>
         </FormItem>
+        <!-- 新增备注信息编辑 -->
+        <FormItem label="备注信息">
+          <Input
+              v-model="formRepEdit.rep_note"
+              type="textarea"
+              :rows="3"
+              placeholder="请输入仓库备注信息"
+          />
+        </FormItem>
         <FormItem>
           <Button
-            type="primary"
-            :loading="loadingEditRepName"
-            @click="UpdRepName"
-            >确定</Button
+              type="primary"
+              :loading="loadingEditRepName"
+              @click="UpdRepName"
+          >确定</Button
           >
         </FormItem>
       </Form>
       <div slot="footer">
         <Button type="primary" ghost @click="modalEditRepName = false"
-          >取消</Button
+        >取消</Button
         >
       </div>
     </Modal>
@@ -813,13 +831,13 @@
       <Form :label-width="80" @submit.native.prevent>
         <FormItem label="UUID">
           <Input
-            v-model="tempRepUUID"
-            placeholder="不填写则自动生成全新UUID"
+              v-model="tempRepUUID"
+              placeholder="不填写则自动生成全新UUID"
           ></Input>
         </FormItem>
         <FormItem>
           <Button type="primary" :loading="loadingSetUUID" @click="SetUUID"
-            >确定</Button
+          >确定</Button
           >
         </FormItem>
       </Form>
@@ -830,26 +848,26 @@
     <!-- 对话框-authz检测结果 -->
     <Modal v-model="modalValidateAuthz" title="authz检测结果">
       <Input
-        v-model="tempmodalValidateAuthz"
-        readonly
-        :rows="15"
-        show-word-limit
-        type="textarea"
+          v-model="tempmodalValidateAuthz"
+          readonly
+          :rows="15"
+          show-word-limit
+          type="textarea"
       />
       <div slot="footer">
         <Button type="primary" ghost @click="modalValidateAuthz = false"
-          >取消</Button
+        >取消</Button
         >
       </div>
     </Modal>
     <!-- 对话框-仓库导入错误 -->
     <Modal v-model="modalRepLoad" :draggable="true" title="仓库导入错误">
       <Input
-        v-model="tempRepLoadError"
-        readonly
-        :rows="15"
-        show-word-limit
-        type="textarea"
+          v-model="tempRepLoadError"
+          readonly
+          :rows="15"
+          show-word-limit
+          type="textarea"
       />
       <div slot="footer">
         <Button type="primary" ghost @click="modalRepLoad = false">取消</Button>
@@ -857,37 +875,37 @@
     </Modal>
     <!-- 对话框-备份文件上传 -->
     <Modal
-      v-model="modalRepUpload"
-      :draggable="true"
-      title="仓库备份文件上传"
-      @on-visible-change="ChangeModalVisible"
+        v-model="modalRepUpload"
+        :draggable="true"
+        title="仓库备份文件上传"
+        @on-visible-change="ChangeModalVisible"
     >
       <Form :label-width="80">
         <FormItem label="上传文件">
           <Button
-            type="primary"
-            icon="ios-cloud-upload-outline"
-            ghost
-            @click="ClickRepUpload"
-            >选择文件</Button
+              type="primary"
+              icon="ios-cloud-upload-outline"
+              ghost
+              @click="ClickRepUpload"
+          >选择文件</Button
           >
           <input
-            type="file"
-            id="myfile"
-            name="myfile"
-            accept=".dump"
-            style="display: none"
+              type="file"
+              id="myfile"
+              name="myfile"
+              accept=".dump"
+              style="display: none"
           />
         </FormItem>
         <FormItem label="上传进度">
           <Progress
-            :percent="file.percent"
-            :stroke-width="20"
-            status="active"
+              :percent="file.percent"
+              :stroke-width="20"
+              status="active"
           />
         </FormItem>
         <FormItem label="文件名称"
-          ><span style="color: #2d8cf0">{{ file.name }}</span>
+        ><span style="color: #2d8cf0">{{ file.name }}</span>
         </FormItem>
         <FormItem label="上传体积">
           <span style="color: #2d8cf0">{{ file.size }}</span></FormItem
@@ -903,21 +921,21 @@
         >
         <FormItem label="分片清理">
           <span style="color: #2d8cf0">{{
-            file.deleteOnMerge == 1
-              ? "合并完成后服务器自动删除分片"
-              : "合并完成后服务器不自动删除分片"
-          }}</span>
+              file.deleteOnMerge == 1
+                  ? "合并完成后服务器自动删除分片"
+                  : "合并完成后服务器不自动删除分片"
+            }}</span>
         </FormItem>
         <FormItem label="上传控制">
           <Button
-            type="primary"
-            ghost
-            v-if="!file.stop"
-            @click="file.stop = true"
-            >暂停</Button
+              type="primary"
+              ghost
+              v-if="!file.stop"
+              @click="file.stop = true"
+          >暂停</Button
           >
           <span v-else style="color: red"
-            >暂停后需要重新选择文件-已上传分片依然有效</span
+          >暂停后需要重新选择文件-已上传分片依然有效</span
           >
         </FormItem>
       </Form>
@@ -927,12 +945,12 @@
     </Modal>
     <!-- 对话框-仓库权限配置 -->
     <ModalRepPri
-      :propCurrentRepName="currentRepName"
-      :propCurrentRepPath="currentRepPath"
-      :propModalRepPri="modalRepPri"
-      :propChangeParentModalVisible="CloseModalRepPri"
-      :propChangeParentCurrentRepPath="ChangeCurrentRepPath"
-      :propSvnnUserPriPathId="svnn_user_pri_path_id"
+        :propCurrentRepName="currentRepName"
+        :propCurrentRepPath="currentRepPath"
+        :propModalRepPri="modalRepPri"
+        :propChangeParentModalVisible="CloseModalRepPri"
+        :propChangeParentCurrentRepPath="ChangeCurrentRepPath"
+        :propSvnnUserPriPathId="svnn_user_pri_path_id"
     />
   </div>
 </template>
@@ -946,6 +964,12 @@ import SparkMD5 from "spark-md5";
 export default {
   data() {
     return {
+      /**
+       * 备份文件显示开关
+       */
+      showOnlyCurrentRepBackups: true,
+
+
       /**
        * 权限相关
        */
@@ -1198,46 +1222,57 @@ export default {
           title: "序号",
           slot: "index",
           fixed: "left",
-          minWidth: 80,
+          width: 80
         },
         {
           title: "仓库名",
           key: "rep_name",
           tooltip: true,
           sortable: "custom",
-          minWidth: 120,
+          width: 200,
+          resizable: true
         },
         {
           title: "版本数",
           slot: "rep_rev",
           sortable: "custom",
-          minWidth: 90,
+          width: 120
         },
         {
           title: "体积",
           slot: "rep_size",
           sortable: "custom",
-          minWidth: 120,
+          width: 120
         },
         {
           title: "备注信息",
           slot: "rep_note",
-          minWidth: 120,
+          minWidth: 200,
+          className: 'header-cell-wrap header-center',
+          render: (h, params) => {  // 添加自定义渲染函数
+            return h('div', {
+              style: {
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-all',
+                padding: '8px 12px'
+              }
+            }, params.row.rep_note)
+          }
         },
         {
           title: "仓库内容",
           slot: "repScan",
-          minWidth: 120,
+          width: 100,
         },
         {
           title: "仓库权限",
           slot: "repPri",
-          minWidth: 120,
+          width: 100,
         },
         {
           title: "仓库钩子",
           slot: "repHooks",
-          width: 120,
+          width: 90,
         },
         {
           title: "其它",
@@ -1253,15 +1288,24 @@ export default {
           title: "序号",
           slot: "index",
           fixed: "left",
-          minWidth: 80,
+          width: 80,
         },
         {
           title: "仓库名",
           key: "rep_name",
           tooltip: true,
           sortable: "custom",
+          width: 200,
+          resizable: true
+        },
+        {
+          title: "仓库备注",
+          key: "rep_note",
+          tooltip: true,
+          sortable: "custom",
           minWidth: 120,
         },
+
         {
           title: "路径/文件",
           tooltip: true,
@@ -1271,7 +1315,7 @@ export default {
         {
           title: "权限",
           key: "rep_pri",
-          minWidth: 120,
+          width: 120,
         },
         {
           title: "二次授权",
@@ -1332,6 +1376,7 @@ export default {
           title: "文件名",
           key: "fileName",
           tooltip: true,
+          minWidth: 100,
         },
         {
           title: "大小",
@@ -1346,7 +1391,7 @@ export default {
         {
           title: "其它",
           slot: "action",
-          width: 200,
+          minWidth: 30,
         },
       ],
       tableDataBackup: [],
@@ -1404,6 +1449,15 @@ export default {
       tableDataRepDetail: [],
     };
   },
+
+  watch: {
+    showOnlyCurrentRepBackups(newVal, oldVal) {
+      if (this.curTabRepAdvance === 'backup') {
+        this.GetBackupList();
+      }
+    }
+  },
+
   components: {
     ModalRepPri,
   },
@@ -1510,22 +1564,22 @@ export default {
       var that = this;
       var data = {};
       that.$axios
-        .post("api.php?c=Svnrep&a=GetSvnserveStatus&t=web", data)
-        .then(function (response) {
-          var result = response.data;
-          if (result.status == 1) {
-            if (!result.data) {
-              that.formStatusSubversion.status = result.data;
-              that.formStatusSubversion.info = result.message;
+          .post("api.php?c=Svnrep&a=GetSvnserveStatus&t=web", data)
+          .then(function (response) {
+            var result = response.data;
+            if (result.status == 1) {
+              if (!result.data) {
+                that.formStatusSubversion.status = result.data;
+                that.formStatusSubversion.info = result.message;
+              }
+            } else {
+              that.$Message.error({ content: result.message, duration: 2 });
             }
-          } else {
-            that.$Message.error({ content: result.message, duration: 2 });
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-          that.$Message.error("出错了 请联系管理员！");
-        });
+          })
+          .catch(function (error) {
+            console.log(error);
+            that.$Message.error("出错了 请联系管理员！");
+          });
     },
 
     /**
@@ -1535,23 +1589,23 @@ export default {
       var that = this;
       var data = {};
       that.$axios
-        .post("api.php?c=Svnrep&a=CheckAuthz&t=web", data)
-        .then(function (response) {
-          var result = response.data;
-          if (result.status == 1) {
-            that.$Message.success(result.message);
-          } else if (result.status == 2) {
-            that.$Message.error({ content: result.message, duration: 2 });
-            that.modalValidateAuthz = true;
-            that.tempmodalValidateAuthz = result.data;
-          } else {
-            that.$Message.error({ content: result.message, duration: 2 });
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-          that.$Message.error("出错了 请联系管理员！");
-        });
+          .post("api.php?c=Svnrep&a=CheckAuthz&t=web", data)
+          .then(function (response) {
+            var result = response.data;
+            if (result.status == 1) {
+              that.$Message.success(result.message);
+            } else if (result.status == 2) {
+              that.$Message.error({ content: result.message, duration: 2 });
+              that.modalValidateAuthz = true;
+              that.tempmodalValidateAuthz = result.data;
+            } else {
+              that.$Message.error({ content: result.message, duration: 2 });
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+            that.$Message.error("出错了 请联系管理员！");
+          });
     },
 
     /**
@@ -1569,23 +1623,23 @@ export default {
         rep_type: that.formRepAdd.rep_type,
       };
       that.$axios
-        .post("api.php?c=Svnrep&a=CreateRep&t=web", data)
-        .then(function (response) {
-          that.loadingCreateRep = false;
-          var result = response.data;
-          if (result.status == 1) {
-            that.modalCreateRep = false;
-            that.$Message.success(result.message);
-            that.GetRepList();
-          } else {
-            that.$Message.error({ content: result.message, duration: 2 });
-          }
-        })
-        .catch(function (error) {
-          that.loadingCreateRep = false;
-          console.log(error);
-          that.$Message.error("出错了 请联系管理员！");
-        });
+          .post("api.php?c=Svnrep&a=CreateRep&t=web", data)
+          .then(function (response) {
+            that.loadingCreateRep = false;
+            var result = response.data;
+            if (result.status == 1) {
+              that.modalCreateRep = false;
+              that.$Message.success(result.message);
+              that.GetRepList();
+            } else {
+              that.$Message.error({ content: result.message, duration: 2 });
+            }
+          })
+          .catch(function (error) {
+            that.loadingCreateRep = false;
+            console.log(error);
+            that.$Message.error("出错了 请联系管理员！");
+          });
     },
 
     GetRepList(sync = false, page = true, sync_size = false, sync_rev = false) {
@@ -1605,23 +1659,23 @@ export default {
         sync_rev: sync_rev,
       };
       that.$axios
-        .post("api.php?c=Svnrep&a=GetRepList&t=web", data)
-        .then(function (response) {
-          that.loadingRep = false;
-          var result = response.data;
-          if (result.status == 1) {
-            // that.$Message.success(result.message);
-            that.tableDataRep = result.data.data;
-            that.totalRep = result.data.total;
-          } else {
-            that.$Message.error({ content: result.message, duration: 2 });
-          }
-        })
-        .catch(function (error) {
-          that.loadingRep = false;
-          console.log(error);
-          that.$Message.error("出错了 请联系管理员！");
-        });
+          .post("api.php?c=Svnrep&a=GetRepList&t=web", data)
+          .then(function (response) {
+            that.loadingRep = false;
+            var result = response.data;
+            if (result.status == 1) {
+              // that.$Message.success(result.message);
+              that.tableDataRep = result.data.data;
+              that.totalRep = result.data.total;
+            } else {
+              that.$Message.error({ content: result.message, duration: 2 });
+            }
+          })
+          .catch(function (error) {
+            that.loadingRep = false;
+            console.log(error);
+            that.$Message.error("出错了 请联系管理员！");
+          });
     },
     SyncRepSize(rep_name, index) {
       var that = this;
@@ -1630,23 +1684,23 @@ export default {
         rep_name: rep_name,
       };
       that.$axios
-        .post("api.php?c=Svnrep&a=SyncRepSize&t=web", data)
-        .then(function (response) {
-          that.loadingRep = false;
-          that.tableDataRep[index].loading_rep_size = false;
-          var result = response.data;
-          if (result.status == 1) {
-            // that.$Message.success(result.message);
-            that.GetRepList();
-          } else {
-            that.$Message.error({ content: result.message, duration: 2 });
-          }
-        })
-        .catch(function (error) {
-          that.tableDataRep[index].loading_rep_size = false;
-          console.log(error);
-          that.$Message.error("出错了 请联系管理员！");
-        });
+          .post("api.php?c=Svnrep&a=SyncRepSize&t=web", data)
+          .then(function (response) {
+            that.loadingRep = false;
+            that.tableDataRep[index].loading_rep_size = false;
+            var result = response.data;
+            if (result.status == 1) {
+              // that.$Message.success(result.message);
+              that.GetRepList();
+            } else {
+              that.$Message.error({ content: result.message, duration: 2 });
+            }
+          })
+          .catch(function (error) {
+            that.tableDataRep[index].loading_rep_size = false;
+            console.log(error);
+            that.$Message.error("出错了 请联系管理员！");
+          });
     },
     SyncRepRev(rep_name, index) {
       var that = this;
@@ -1655,23 +1709,23 @@ export default {
         rep_name: rep_name,
       };
       that.$axios
-        .post("api.php?c=Svnrep&a=SyncRepRev&t=web", data)
-        .then(function (response) {
-          that.loadingRep = false;
-          that.tableDataRep[index].loading_rep_rev = false;
-          var result = response.data;
-          if (result.status == 1) {
-            // that.$Message.success(result.message);
-            that.GetRepList();
-          } else {
-            that.$Message.error({ content: result.message, duration: 2 });
-          }
-        })
-        .catch(function (error) {
-          that.tableDataRep[index].loading_rep_rev = false;
-          console.log(error);
-          that.$Message.error("出错了 请联系管理员！");
-        });
+          .post("api.php?c=Svnrep&a=SyncRepRev&t=web", data)
+          .then(function (response) {
+            that.loadingRep = false;
+            that.tableDataRep[index].loading_rep_rev = false;
+            var result = response.data;
+            if (result.status == 1) {
+              // that.$Message.success(result.message);
+              that.GetRepList();
+            } else {
+              that.$Message.error({ content: result.message, duration: 2 });
+            }
+          })
+          .catch(function (error) {
+            that.tableDataRep[index].loading_rep_rev = false;
+            console.log(error);
+            that.$Message.error("出错了 请联系管理员！");
+          });
     },
     /**
      * 所有仓库列表页码改变
@@ -1728,24 +1782,24 @@ export default {
         page: page,
       };
       that.$axios
-        .post("api.php?c=Svnrep&a=GetSvnUserRepList&t=web", data)
-        .then(function (response) {
-          that.loadingUserRep = false;
-          var result = response.data;
-          if (result.status == 1) {
-            // that.$Message.success(result.message);
-            that.tableDataUserRep = result.data.data;
-            that.totalUserRep = result.data.total;
-            that.enableCheckout = result.data.enableCheckout;
-          } else {
-            that.$Message.error({ content: result.message, duration: 2 });
-          }
-        })
-        .catch(function (error) {
-          that.loadingUserRep = false;
-          console.log(error);
-          that.$Message.error("出错了 请联系管理员！");
-        });
+          .post("api.php?c=Svnrep&a=GetSvnUserRepList&t=web", data)
+          .then(function (response) {
+            that.loadingUserRep = false;
+            var result = response.data;
+            if (result.status == 1) {
+              // that.$Message.success(result.message);
+              that.tableDataUserRep = result.data.data;
+              that.totalUserRep = result.data.total;
+              that.enableCheckout = result.data.enableCheckout;
+            } else {
+              that.$Message.error({ content: result.message, duration: 2 });
+            }
+          })
+          .catch(function (error) {
+            that.loadingUserRep = false;
+            console.log(error);
+            that.$Message.error("出错了 请联系管理员！");
+          });
     },
     /**
      * 用户仓库列表页码改变
@@ -1783,19 +1837,19 @@ export default {
         rep_note: that.tableDataRep[index].rep_note,
       };
       that.$axios
-        .post("api.php?c=Svnrep&a=UpdRepNote&t=web", data)
-        .then(function (response) {
-          var result = response.data;
-          if (result.status == 1) {
-            that.$Message.success(result.message);
-          } else {
-            that.$Message.error({ content: result.message, duration: 2 });
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-          that.$Message.error("出错了 请联系管理员！");
-        });
+          .post("api.php?c=Svnrep&a=UpdRepNote&t=web", data)
+          .then(function (response) {
+            var result = response.data;
+            if (result.status == 1) {
+              that.$Message.success(result.message);
+            } else {
+              that.$Message.error({ content: result.message, duration: 2 });
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+            that.$Message.error("出错了 请联系管理员！");
+          });
     },
 
     /**
@@ -1841,14 +1895,14 @@ export default {
           that.loadingRepCon = false;
           //设置表格提示信息
           that.noDataTextRepCon =
-            "由于svnserve服务未启动，SVN用户只能复制检出地址而不能进行仓库内容浏览";
+              "由于svnserve服务未启动，SVN用户只能复制检出地址而不能进行仓库内容浏览";
           //更新检出地址
           that.tempCheckout =
-            that.checkInfo.protocal +
-            that.checkInfo.prefix +
-            "/" +
-            that.currentRepName +
-            that.currentRepPath;
+              that.checkInfo.protocal +
+              that.checkInfo.prefix +
+              "/" +
+              that.currentRepName +
+              that.currentRepPath;
         }
       });
     },
@@ -1874,22 +1928,22 @@ export default {
       var data = {};
       return new Promise(function (resolve, reject) {
         that.$axios
-          .post("api.php?c=Svnrep&a=GetCheckout&t=web", data)
-          .then(function (response) {
-            var result = response.data;
-            if (result.status == 1) {
-              that.checkInfo = result.data;
-            } else {
-              that.loadingRepCon = false;
-              that.$Message.error({ content: result.message, duration: 2 });
-            }
-            resolve(response);
-          })
-          .catch(function (error) {
-            console.log(error);
-            that.$Message.error("出错了 请联系管理员！");
-            reject(error);
-          });
+            .post("api.php?c=Svnrep&a=GetCheckout&t=web", data)
+            .then(function (response) {
+              var result = response.data;
+              if (result.status == 1) {
+                that.checkInfo = result.data;
+              } else {
+                that.loadingRepCon = false;
+                that.$Message.error({ content: result.message, duration: 2 });
+              }
+              resolve(response);
+            })
+            .catch(function (error) {
+              console.log(error);
+              that.$Message.error("出错了 请联系管理员！");
+              reject(error);
+            });
       });
     },
     /**
@@ -1903,29 +1957,29 @@ export default {
         path: that.currentRepPath,
       };
       that.$axios
-        .post("api.php?c=Svnrep&a=GetRepCon&t=web", data)
-        .then(function (response) {
-          that.loadingRepCon = false;
-          var result = response.data;
-          if (result.status == 1) {
-            that.tableDataRepCon = result.data.data;
-            that.breadRepPath = result.data.bread;
-            //更新检出地址
-            that.tempCheckout =
-              that.checkInfo.protocal +
-              that.checkInfo.prefix +
-              "/" +
-              that.currentRepName +
-              that.currentRepPath;
-          } else {
-            that.$Message.error({ content: result.message, duration: 2 });
-          }
-        })
-        .catch(function (error) {
-          that.loadingRepCon = false;
-          console.log(error);
-          that.$Message.error("出错了 请联系管理员！");
-        });
+          .post("api.php?c=Svnrep&a=GetRepCon&t=web", data)
+          .then(function (response) {
+            that.loadingRepCon = false;
+            var result = response.data;
+            if (result.status == 1) {
+              that.tableDataRepCon = result.data.data;
+              that.breadRepPath = result.data.bread;
+              //更新检出地址
+              that.tempCheckout =
+                  that.checkInfo.protocal +
+                  that.checkInfo.prefix +
+                  "/" +
+                  that.currentRepName +
+                  that.currentRepPath;
+            } else {
+              that.$Message.error({ content: result.message, duration: 2 });
+            }
+          })
+          .catch(function (error) {
+            that.loadingRepCon = false;
+            console.log(error);
+            that.$Message.error("出错了 请联系管理员！");
+          });
     },
     /**
      * 获取用户仓库内容
@@ -1938,29 +1992,29 @@ export default {
         path: that.currentRepPath,
       };
       that.$axios
-        .post("api.php?c=Svnrep&a=GetUserRepCon&t=web", data)
-        .then(function (response) {
-          that.loadingRepCon = false;
-          var result = response.data;
-          if (result.status == 1) {
-            that.tableDataRepCon = result.data.data;
-            that.breadRepPath = result.data.bread;
-            //更新检出地址
-            that.tempCheckout =
-              that.checkInfo.protocal +
-              that.checkInfo.prefix +
-              "/" +
-              that.currentRepName +
-              that.currentRepPath;
-          } else {
-            that.$Message.error({ content: result.message, duration: 2 });
-          }
-        })
-        .catch(function (error) {
-          that.loadingRepCon = false;
-          console.log(error);
-          that.$Message.error("出错了 请联系管理员！");
-        });
+          .post("api.php?c=Svnrep&a=GetUserRepCon&t=web", data)
+          .then(function (response) {
+            that.loadingRepCon = false;
+            var result = response.data;
+            if (result.status == 1) {
+              that.tableDataRepCon = result.data.data;
+              that.breadRepPath = result.data.bread;
+              //更新检出地址
+              that.tempCheckout =
+                  that.checkInfo.protocal +
+                  that.checkInfo.prefix +
+                  "/" +
+                  that.currentRepName +
+                  that.currentRepPath;
+            } else {
+              that.$Message.error({ content: result.message, duration: 2 });
+            }
+          })
+          .catch(function (error) {
+            that.loadingRepCon = false;
+            console.log(error);
+            that.$Message.error("出错了 请联系管理员！");
+          });
     },
     /**
      * 点击某行获取仓库路径内容
@@ -1992,42 +2046,99 @@ export default {
     CopyCheckout() {
       var that = this;
       that.$copyText(that.tempCheckout).then(
-        function (e) {
-          that.$Message.success("复制成功");
-        },
-        function (e) {
-          that.$Message.error("复制失败，请手动复制");
-        }
+          function (e) {
+            that.$Message.success("复制成功");
+          },
+          function (e) {
+            that.$Message.error("复制失败，请手动复制");
+          }
       );
     },
-    /**
-     * 获取备份文件夹下的文件列表
-     */
+    /*GetBackupList() {
+      var that = this;
+      that.loadingRepBackupList = true;
+      that.tableDataBackup = [];
+      var data = {};
+      that.$axios
+          .post("api.php?c=Svnrep&a=GetBackupList&t=web", data)
+          .then(function (response) {
+            that.loadingRepBackupList = false;
+            var result = response.data;
+            if (result.status == 1) {
+              let displayData = result.data;
+
+              // 根据开关决定是否过滤
+              if (that.showOnlyCurrentRepBackups) {
+                displayData = result.data.filter(file => {
+                  return file.fileName.includes(that.currentRepName);
+                });
+              }
+
+              that.tableDataBackup = displayData;
+
+              for (var i = 0; i < displayData.length; i++) {
+                that.loadingLoadBackup[i] = false;
+              }
+            } else {
+              that.$Message.error({content: result.message, duration: 2});
+            }
+          })
+          .catch(function (error) {
+            that.loadingRepBackupList = false;
+            console.log(error);
+            that.$Message.error("出错了 请联系管理员！");
+          });
+    },*/
+    // ... existing code ...
+    // ... existing code ...
     GetBackupList() {
       var that = this;
       that.loadingRepBackupList = true;
       that.tableDataBackup = [];
       var data = {};
       that.$axios
-        .post("api.php?c=Svnrep&a=GetBackupList&t=web", data)
-        .then(function (response) {
-          that.loadingRepBackupList = false;
-          var result = response.data;
-          if (result.status == 1) {
-            that.tableDataBackup = result.data;
-            for (var i = 0; i < result.data.length; i++) {
-              that.loadingLoadBackup[i] = false;
+          .post("api.php?c=Svnrep&a=GetBackupList&t=web", data)
+          .then(function (response) {
+            that.loadingRepBackupList = false;
+            var result = response.data;
+            if (result.status == 1) {
+              let displayData = result.data;
+
+              // 根据开关决定是否过滤
+              if (that.showOnlyCurrentRepBackups) {
+                displayData = result.data.filter(file => {
+                  // 文件名严格匹配规则：
+                  // 1. 以"仓库名_"开头
+                  // 2. 以"rep_仓库名_"开头
+                  const pattern1 = new RegExp('^' + that.currentRepName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '_');
+                  const pattern2 = new RegExp('^rep_' + that.currentRepName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '_');
+
+                  return pattern1.test(file.fileName) || pattern2.test(file.fileName);
+                });
+              }
+
+              that.tableDataBackup = displayData;
+
+              for (var i = 0; i < displayData.length; i++) {
+                that.loadingLoadBackup[i] = false;
+              }
+            } else {
+              that.$Message.error({content: result.message, duration: 2});
             }
-          } else {
-            that.$Message.error({ content: result.message, duration: 2 });
-          }
-        })
-        .catch(function (error) {
-          that.loadingRepBackupList = false;
-          console.log(error);
-          that.$Message.error("出错了 请联系管理员！");
-        });
+          })
+          .catch(function (error) {
+            that.loadingRepBackupList = false;
+            console.log(error);
+            that.$Message.error("出错了 请联系管理员！");
+          });
     },
+
+
+
+
+
+
+
     //立即备份
     SvnadminDump() {
       var that = this;
@@ -2036,22 +2147,22 @@ export default {
         rep_name: that.currentRepName,
       };
       that.$axios
-        .post("api.php?c=Svnrep&a=SvnadminDump&t=web", data)
-        .then(function (response) {
-          that.loadingRepDump = false;
-          var result = response.data;
-          if (result.status == 1) {
-            that.$Message.success(result.message);
-            that.GetBackupList();
-          } else {
-            that.$Message.error({ content: result.message, duration: 2 });
-          }
-        })
-        .catch(function (error) {
-          that.loadingRepDump = false;
-          console.log(error);
-          that.$Message.error("出错了 请联系管理员！");
-        });
+          .post("api.php?c=Svnrep&a=SvnadminDump&t=web", data)
+          .then(function (response) {
+            that.loadingRepDump = false;
+            var result = response.data;
+            if (result.status == 1) {
+              that.$Message.success(result.message);
+              that.GetBackupList();
+            } else {
+              that.$Message.error({ content: result.message, duration: 2 });
+            }
+          })
+          .catch(function (error) {
+            that.loadingRepDump = false;
+            console.log(error);
+            that.$Message.error("出错了 请联系管理员！");
+          });
     },
     //点击按钮 触发隐藏 input 的 click 事件
     ClickRepUpload() {
@@ -2116,52 +2227,52 @@ export default {
         if (!that.file.stop) {
           // 通过await实现顺序上传
           await that
-            .UploadBackup(formdata)
-            .then(function (response) {
-              var result = response.data;
-              if (result.status == 1) {
-                if (result.data.completeCount == that.file.total / 2 - 1) {
-                  that.file.desc = "分片合并中";
-                } else if (result.data.completeCount == that.file.total / 2) {
-                  that.file.desc = "分片合并完成（上传成功）";
+              .UploadBackup(formdata)
+              .then(function (response) {
+                var result = response.data;
+                if (result.status == 1) {
+                  if (result.data.completeCount == that.file.total / 2 - 1) {
+                    that.file.desc = "分片合并中";
+                  } else if (result.data.completeCount == that.file.total / 2) {
+                    that.file.desc = "分片合并完成（上传成功）";
+                  } else {
+                    // that.file.desc = "分片上传中";
+                    that.file.desc = `${that.file.chunkCount} 个分片上传中`;
+                  }
+                  if (result.data.complete) {
+                    //进度条百分比
+                    that.file.percent = 100;
+                    //剩余时间
+                    var formateTime = that.FormatTime(0);
+                    that.file.left = `${formateTime[0]}时${formateTime[1]}分${formateTime[2]}秒`;
+                    that.$Message.success(result.message);
+                    that.GetBackupList();
+                    that.file.stop = true;
+                  } else {
+                    //进度条百分比
+                    that.file.current++;
+                    that.file.percent = Math.trunc(
+                        (that.file.current / that.file.total) * 100
+                    );
+                    //剩余时间
+                    var formateTime = that.FormatTime(
+                        that.file.total - that.file.current
+                    );
+                    that.file.left = `${formateTime[0]}时${formateTime[1]}分${formateTime[2]}秒`;
+                  }
                 } else {
-                  // that.file.desc = "分片上传中";
-                  that.file.desc = `${that.file.chunkCount} 个分片上传中`;
-                }
-                if (result.data.complete) {
-                  //进度条百分比
-                  that.file.percent = 100;
-                  //剩余时间
-                  var formateTime = that.FormatTime(0);
-                  that.file.left = `${formateTime[0]}时${formateTime[1]}分${formateTime[2]}秒`;
-                  that.$Message.success(result.message);
-                  that.GetBackupList();
                   that.file.stop = true;
-                } else {
-                  //进度条百分比
-                  that.file.current++;
-                  that.file.percent = Math.trunc(
-                    (that.file.current / that.file.total) * 100
-                  );
-                  //剩余时间
-                  var formateTime = that.FormatTime(
-                    that.file.total - that.file.current
-                  );
-                  that.file.left = `${formateTime[0]}时${formateTime[1]}分${formateTime[2]}秒`;
+                  that.$Message.error({
+                    content: result.message,
+                    duration: 2,
+                  });
                 }
-              } else {
+              })
+              .catch(function (error) {
                 that.file.stop = true;
-                that.$Message.error({
-                  content: result.message,
-                  duration: 2,
-                });
-              }
-            })
-            .catch(function (error) {
-              that.file.stop = true;
-              console.log(error);
-              that.$Message.error("出错了 请联系管理员！");
-            });
+                console.log(error);
+                that.$Message.error("出错了 请联系管理员！");
+              });
         }
 
         if (that.file.stop) {
@@ -2177,13 +2288,13 @@ export default {
       };
       return new Promise(function (resolve, reject) {
         that.$axios
-          .post("api.php?c=Svnrep&a=UploadBackup&t=web", data, config)
-          .then(function (response) {
-            resolve(response);
-          })
-          .catch(function (error) {
-            reject(error);
-          });
+            .post("api.php?c=Svnrep&a=UploadBackup&t=web", data, config)
+            .then(function (response) {
+              resolve(response);
+            })
+            .catch(function (error) {
+              reject(error);
+            });
       });
     },
     //计算md5
@@ -2191,9 +2302,9 @@ export default {
       let that = this;
       return new Promise((resolve, reject) => {
         let blobSlice =
-          File.prototype.slice ||
-          File.prototype.mozSlice ||
-          File.prototype.webkitSlice;
+            File.prototype.slice ||
+            File.prototype.mozSlice ||
+            File.prototype.webkitSlice;
         let chunks = Math.ceil(file.size / chunkSize);
         let currentChunk = 0;
         let spark = new SparkMD5.ArrayBuffer();
@@ -2228,11 +2339,11 @@ export default {
           //进度条百分比
           that.file.current++;
           that.file.percent = Math.trunc(
-            (that.file.current / that.file.total) * 100
+              (that.file.current / that.file.total) * 100
           );
           //剩余时间
           var formateTime = that.FormatTime(
-            that.file.total - that.file.current
+              that.file.total - that.file.current
           );
           that.file.left = `${formateTime[0]}时${formateTime[1]}分${formateTime[2]}秒`;
           //当前状态
@@ -2261,20 +2372,20 @@ export default {
             fileName: fileName,
           };
           that.$axios
-            .post("api.php?c=Svnrep&a=DelRepBackup&t=web", data)
-            .then(function (response) {
-              var result = response.data;
-              if (result.status == 1) {
-                that.$Message.success(result.message);
-                that.GetBackupList();
-              } else {
-                that.$Message.error({ content: result.message, duration: 2 });
-              }
-            })
-            .catch(function (error) {
-              console.log(error);
-              that.$Message.error("出错了 请联系管理员！");
-            });
+              .post("api.php?c=Svnrep&a=DelRepBackup&t=web", data)
+              .then(function (response) {
+                var result = response.data;
+                if (result.status == 1) {
+                  that.$Message.success(result.message);
+                  that.GetBackupList();
+                } else {
+                  that.$Message.error({ content: result.message, duration: 2 });
+                }
+              })
+              .catch(function (error) {
+                console.log(error);
+                that.$Message.error("出错了 请联系管理员！");
+              });
         },
       });
     },
@@ -2327,21 +2438,21 @@ export default {
         rep_name: that.currentRepName,
       };
       that.$axios
-        .post("api.php?c=Svnrep&a=GetRepHooks&t=web", data)
-        .then(function (response) {
-          that.loadingGetRepHooks = false;
-          var result = response.data;
-          if (result.status == 1) {
-            that.formRepHooks = result.data;
-          } else {
-            that.$Message.error({ content: result.message, duration: 2 });
-          }
-        })
-        .catch(function (error) {
-          that.loadingGetRepHooks = false;
-          console.log(error);
-          that.$Message.error("出错了 请联系管理员！");
-        });
+          .post("api.php?c=Svnrep&a=GetRepHooks&t=web", data)
+          .then(function (response) {
+            that.loadingGetRepHooks = false;
+            var result = response.data;
+            if (result.status == 1) {
+              that.formRepHooks = result.data;
+            } else {
+              that.$Message.error({ content: result.message, duration: 2 });
+            }
+          })
+          .catch(function (error) {
+            that.loadingGetRepHooks = false;
+            console.log(error);
+            that.$Message.error("出错了 请联系管理员！");
+          });
     },
     /**
      * 获取推荐钩子
@@ -2350,19 +2461,19 @@ export default {
       var that = this;
       var data = {};
       that.$axios
-        .post("api.php?c=Svnrep&a=GetRecommendHooks&t=web", data)
-        .then(function (response) {
-          var result = response.data;
-          if (result.status == 1) {
-            that.recommendHooks = result.data;
-          } else {
-            that.$Message.error({ content: result.message, duration: 2 });
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-          that.$Message.error("出错了 请联系管理员！");
-        });
+          .post("api.php?c=Svnrep&a=GetRecommendHooks&t=web", data)
+          .then(function (response) {
+            var result = response.data;
+            if (result.status == 1) {
+              that.recommendHooks = result.data;
+            } else {
+              that.$Message.error({ content: result.message, duration: 2 });
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+            that.$Message.error("出错了 请联系管理员！");
+          });
     },
     /**
      * 移除仓库钩子
@@ -2375,22 +2486,22 @@ export default {
         fileName: fileName,
       };
       that.$axios
-        .post("api.php?c=Svnrep&a=DelRepHook&t=web", data)
-        .then(function (response) {
-          var result = response.data;
-          if (result.status == 1) {
-            that.$Message.success(result.message);
-            that.GetRepHooks();
-          } else {
+          .post("api.php?c=Svnrep&a=DelRepHook&t=web", data)
+          .then(function (response) {
+            var result = response.data;
+            if (result.status == 1) {
+              that.$Message.success(result.message);
+              that.GetRepHooks();
+            } else {
+              that.loadingGetRepHooks = false;
+              that.$Message.error({ content: result.message, duration: 2 });
+            }
+          })
+          .catch(function (error) {
             that.loadingGetRepHooks = false;
-            that.$Message.error({ content: result.message, duration: 2 });
-          }
-        })
-        .catch(function (error) {
-          that.loadingGetRepHooks = false;
-          console.log(error);
-          that.$Message.error("出错了 请联系管理员！");
-        });
+            console.log(error);
+            that.$Message.error("出错了 请联系管理员！");
+          });
     },
     /**
      * 查看钩子模板内容
@@ -2402,7 +2513,7 @@ export default {
       this.tempSelectRepHookTmpl = this.formRepHooks[key].tmpl;
       //设置标题
       this.titleModalStudyRepHook =
-        "钩子信息介绍 - " + this.formRepHooks[key].fileName;
+          "钩子信息介绍 - " + this.formRepHooks[key].fileName;
       // 展示输入框
       this.modalStudyRepHook = true;
     },
@@ -2416,7 +2527,7 @@ export default {
       this.tempSelectRepHookCon = this.formRepHooks[key].con;
       //设置标题
       this.titleModalEditRepHook =
-        "钩子文件编辑 - " + this.formRepHooks[key].fileName;
+          "钩子文件编辑 - " + this.formRepHooks[key].fileName;
       // 展示输入框
       this.modalEditRepHook = true;
     },
@@ -2425,7 +2536,7 @@ export default {
      */
     ViewRecommendHook(hookName) {
       var temp = this.recommendHooks.filter(
-        (item) => (item.hookName = hookName)
+          (item) => (item.hookName = hookName)
       );
       //设置当前选中的内容到输入框
       this.tempSelectRepHookRecommend = temp[0].hookContent;
@@ -2441,23 +2552,23 @@ export default {
         content: that.tempSelectRepHookCon,
       };
       that.$axios
-        .post("api.php?c=Svnrep&a=UpdRepHook&t=web", data)
-        .then(function (response) {
-          that.loadingEditRepHook = false;
-          var result = response.data;
-          if (result.status == 1) {
-            that.modalEditRepHook = false;
-            that.$Message.success(result.message);
-            that.GetRepHooks();
-          } else {
-            that.$Message.error({ content: result.message, duration: 2 });
-          }
-        })
-        .catch(function (error) {
-          that.loadingEditRepHook = false;
-          console.log(error);
-          that.$Message.error("出错了 请联系管理员！");
-        });
+          .post("api.php?c=Svnrep&a=UpdRepHook&t=web", data)
+          .then(function (response) {
+            that.loadingEditRepHook = false;
+            var result = response.data;
+            if (result.status == 1) {
+              that.modalEditRepHook = false;
+              that.$Message.success(result.message);
+              that.GetRepHooks();
+            } else {
+              that.$Message.error({ content: result.message, duration: 2 });
+            }
+          })
+          .catch(function (error) {
+            that.loadingEditRepHook = false;
+            console.log(error);
+            that.$Message.error("出错了 请联系管理员！");
+          });
     },
     /**
      * 高级
@@ -2481,21 +2592,21 @@ export default {
         rep_name: that.currentRepName,
       };
       that.$axios
-        .post("api.php?c=Svnrep&a=GetRepDetail&t=web", data)
-        .then(function (response) {
-          that.loadingRepDetail = false;
-          var result = response.data;
-          if (result.status == 1) {
-            that.tableDataRepDetail = result.data;
-          } else {
-            that.$Message.error({ content: result.message, duration: 2 });
-          }
-        })
-        .catch(function (error) {
-          that.loadingRepDetail = false;
-          console.log(error);
-          that.$Message.error("出错了 请联系管理员！");
-        });
+          .post("api.php?c=Svnrep&a=GetRepDetail&t=web", data)
+          .then(function (response) {
+            that.loadingRepDetail = false;
+            var result = response.data;
+            if (result.status == 1) {
+              that.tableDataRepDetail = result.data;
+            } else {
+              that.$Message.error({ content: result.message, duration: 2 });
+            }
+          })
+          .catch(function (error) {
+            that.loadingRepDetail = false;
+            console.log(error);
+            that.$Message.error("出错了 请联系管理员！");
+          });
     },
     /**
      * 复制仓库属性
@@ -2503,16 +2614,16 @@ export default {
     CopyRepDetail(index) {
       var that = this;
       var copyContent =
-        that.tableDataRepDetail[index].repKey +
-        ":" +
-        that.tableDataRepDetail[index].repValue;
+          that.tableDataRepDetail[index].repKey +
+          ":" +
+          that.tableDataRepDetail[index].repValue;
       that.$copyText(copyContent).then(
-        function (e) {
-          that.$Message.success("复制成功");
-        },
-        function (e) {
-          that.$Message.error("复制失败，请手动复制");
-        }
+          function (e) {
+            that.$Message.success("复制成功");
+          },
+          function (e) {
+            that.$Message.error("复制失败，请手动复制");
+          }
       );
     },
     /**
@@ -2532,44 +2643,44 @@ export default {
         uuid: that.tempRepUUID,
       };
       that.$axios
-        .post("api.php?c=Svnrep&a=SetUUID&t=web", data)
-        .then(function (response) {
-          that.loadingSetUUID = false;
-          var result = response.data;
-          if (result.status == 1) {
-            that.$Message.success(result.message);
-            that.GetRepDetail();
-            that.modalSetUUID = false;
-          } else {
-            that.$Message.error({ content: result.message, duration: 2 });
-          }
-        })
-        .catch(function (error) {
-          that.loadingSetUUID = false;
-          console.log(error);
-          that.$Message.error("出错了 请联系管理员！");
-        });
+          .post("api.php?c=Svnrep&a=SetUUID&t=web", data)
+          .then(function (response) {
+            that.loadingSetUUID = false;
+            var result = response.data;
+            if (result.status == 1) {
+              that.$Message.success(result.message);
+              that.GetRepDetail();
+              that.modalSetUUID = false;
+            } else {
+              that.$Message.error({ content: result.message, duration: 2 });
+            }
+          })
+          .catch(function (error) {
+            that.loadingSetUUID = false;
+            console.log(error);
+            that.$Message.error("出错了 请联系管理员！");
+          });
     },
     //获取php文件上传相关参数
     GetUploadInfo() {
       var that = this;
       var data = {};
       that.$axios
-        .post("api.php?c=Svnrep&a=GetUploadInfo&t=web", data)
-        .then(function (response) {
-          var result = response.data;
-          if (result.status == 1) {
-            that.file.on = result.data.upload;
-            that.file.chunkSize = result.data.chunkSize;
-            that.file.deleteOnMerge = result.data.deleteOnMerge;
-          } else {
-            that.$Message.error({ content: result.message, duration: 2 });
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-          that.$Message.error("出错了 请联系管理员！");
-        });
+          .post("api.php?c=Svnrep&a=GetUploadInfo&t=web", data)
+          .then(function (response) {
+            var result = response.data;
+            if (result.status == 1) {
+              that.file.on = result.data.upload;
+              that.file.chunkSize = result.data.chunkSize;
+              that.file.deleteOnMerge = result.data.deleteOnMerge;
+            } else {
+              that.$Message.error({ content: result.message, duration: 2 });
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+            that.$Message.error("出错了 请联系管理员！");
+          });
     },
     //上传前
     BeforeUpload() {
@@ -2591,76 +2702,109 @@ export default {
       var that = this;
       that.loadingLoadBackup[index] = true;
       that.loadingLoadBackup = JSON.parse(
-        JSON.stringify(that.loadingLoadBackup)
+          JSON.stringify(that.loadingLoadBackup)
       );
       var data = {
         rep_name: that.currentRepName,
         fileName: fileName,
       };
       that.$axios
-        .post("api.php?c=Svnrep&a=SvnadminLoad&t=web", data)
-        .then(function (response) {
-          that.loadingLoadBackup[index] = false;
-          that.loadingLoadBackup = JSON.parse(
-            JSON.stringify(that.loadingLoadBackup)
-          );
-          var result = response.data;
-          if (result.status == 1) {
-            that.$Message.success(result.message);
-          } else {
-            that.$Message.error({ content: result.message, duration: 2 });
-            that.modalRepLoad = true;
-            that.tempRepLoadError = result.data;
-          }
-        })
-        .catch(function (error) {
-          that.loadingLoadBackup[index] = true;
-          that.loadingLoadBackup = JSON.parse(
-            JSON.stringify(that.loadingLoadBackup)
-          );
-          console.log(error);
-          that.$Message.error("出错了 请联系管理员！");
-        });
+          .post("api.php?c=Svnrep&a=SvnadminLoad&t=web", data)
+          .then(function (response) {
+            that.loadingLoadBackup[index] = false;
+            that.loadingLoadBackup = JSON.parse(
+                JSON.stringify(that.loadingLoadBackup)
+            );
+            var result = response.data;
+            if (result.status == 1) {
+              that.$Message.success(result.message);
+            } else {
+              that.$Message.error({ content: result.message, duration: 2 });
+              that.modalRepLoad = true;
+              that.tempRepLoadError = result.data;
+            }
+          })
+          .catch(function (error) {
+            that.loadingLoadBackup[index] = true;
+            that.loadingLoadBackup = JSON.parse(
+                JSON.stringify(that.loadingLoadBackup)
+            );
+            console.log(error);
+            that.$Message.error("出错了 请联系管理员！");
+          });
     },
 
     /**
-     * 编辑仓库名称
+     * 编辑仓库信息
      */
     ModalEditRepName(rep_name) {
       //备份旧名称
       this.formRepEdit.old_rep_name = JSON.parse(JSON.stringify(rep_name));
-      //设置新名称
+      //设置新名称和备注
+      const currentRep = this.tableDataRep.find(rep => rep.rep_name === rep_name);
       this.formRepEdit.new_rep_name = JSON.parse(JSON.stringify(rep_name));
+      this.formRepEdit.rep_note = currentRep ? currentRep.rep_note : '';
       //配置标题
-      this.titleModalEditRepName = "修改仓库名称 - " + rep_name;
+      this.titleModalEditRepName = "修改仓库信息 - " + rep_name;
       //显示对话框
       this.modalEditRepName = true;
     },
+    // 修改 UpdRepName 方法
     UpdRepName() {
       var that = this;
       that.loadingEditRepName = true;
-      var data = {
-        old_rep_name: that.formRepEdit.old_rep_name,
-        new_rep_name: that.formRepEdit.new_rep_name,
-      };
-      that.$axios
-        .post("api.php?c=Svnrep&a=UpdRepName&t=web", data)
-        .then(function (response) {
-          that.loadingEditRepName = false;
-          var result = response.data;
-          if (result.status == 1) {
-            that.$Message.success(result.message);
-            that.modalEditRepName = false;
-            that.GetRepList();
-          } else {
-            that.$Message.error({ content: result.message, duration: 2 });
-          }
-        })
-        .catch(function (error) {
-          that.loadingEditRepName = false;
-          console.log(error);
-          that.$Message.error("出错了 请联系管理员！");
-        });
+
+      // 获取原始数据用于比较
+      const originalRep = that.tableDataRep.find(
+          rep => rep.rep_name === that.formRepEdit.old_rep_name
+      );
+
+      const promises = [];
+
+      // 判断仓库名称是否修改
+      if (that.formRepEdit.new_rep_name !== that.formRepEdit.old_rep_name) {
+        promises.push(
+            that.$axios.post("api.php?c=Svnrep&a=UpdRepName&t=web", {
+              old_rep_name: that.formRepEdit.old_rep_name,
+              new_rep_name: that.formRepEdit.new_rep_name
+            })
+        );
+      }
+
+      // 判断备注信息是否修改
+      if (originalRep && that.formRepEdit.rep_note !== originalRep.rep_note) {
+        promises.push(
+            that.$axios.post("api.php?c=Svnrep&a=UpdRepNote&t=web", {
+              rep_name: that.formRepEdit.old_rep_name, // 使用原始名称保证准确性
+              rep_note: that.formRepEdit.rep_note
+            })
+        );
+      }
+
+      // 执行所有需要更新的请求
+      Promise.all(promises)
+          .then(responses => {
+            that.loadingEditRepName = false;
+            responses.forEach(response => {
+              const result = response.data;
+              if (result.status !== 1) {
+                that.$Message.error({ content: result.message, duration: 2 });
+              }
+            });
+
+            if (promises.length > 0) {
+              that.$Message.success("更新成功");
+              that.GetRepList();
+              that.modalEditRepName = false;
+            } else {
+              that.$Message.info("未修改任何信息");
+            }
+          })
+          .catch(error => {
+            that.loadingEditRepName = false;
+            console.log(error);
+            that.$Message.error("更新过程中发生错误");
+          });
     },
 
     /**
@@ -2675,92 +2819,92 @@ export default {
         render: (h) => {
           return h("div", [
             h(
-              "div",
-              {
-                class: { "modal-title": true },
-                style: {
-                  display: "flex",
-                  height: "42px",
-                  alignItems: "center",
-                },
-              },
-              [
-                h("Icon", {
-                  props: {
-                    type: "ios-help-circle",
-                  },
+                "div",
+                {
+                  class: { "modal-title": true },
                   style: {
-                    width: "28px",
-                    height: "28px",
-                    fontSize: "28px",
-                    color: "#f90",
+                    display: "flex",
+                    height: "42px",
+                    alignItems: "center",
                   },
-                }),
-                h(
-                  "tooltip",
-                  {
+                },
+                [
+                  h("Icon", {
                     props: {
-                      transfer: true,
-                      placement: "bottom",
-                      "max-width": "400",
+                      type: "ios-help-circle",
                     },
-                  },
-                  [
-                    h("span", {
-                      style: {
-                        marginLeft: "12px",
-                        fontSize: "16px",
-                        color: "#17233d",
-                        fontWeight: 500,
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        width: "285px",
-                        display: "inline-block",
-                      },
-                      domProps: {
-                        innerHTML: "删除仓库 - " + rep_name,
-                      },
-                    }),
-                    h(
-                      "div",
+                    style: {
+                      width: "28px",
+                      height: "28px",
+                      fontSize: "28px",
+                      color: "#f90",
+                    },
+                  }),
+                  h(
+                      "tooltip",
                       {
-                        slot: "content",
-                        style: {
-                          fontSize: "10px",
+                        props: {
+                          transfer: true,
+                          placement: "bottom",
+                          "max-width": "400",
                         },
                       },
                       [
-                        h(
-                          "p",
-                          {
-                            style: {
-                              fontSize: "15px",
-                            },
+                        h("span", {
+                          style: {
+                            marginLeft: "12px",
+                            fontSize: "16px",
+                            color: "#17233d",
+                            fontWeight: 500,
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            width: "285px",
+                            display: "inline-block",
                           },
-                          "删除仓库 - " + rep_name
+                          domProps: {
+                            innerHTML: "删除仓库 - " + rep_name,
+                          },
+                        }),
+                        h(
+                            "div",
+                            {
+                              slot: "content",
+                              style: {
+                                fontSize: "10px",
+                              },
+                            },
+                            [
+                              h(
+                                  "p",
+                                  {
+                                    style: {
+                                      fontSize: "15px",
+                                    },
+                                  },
+                                  "删除仓库 - " + rep_name
+                              ),
+                            ]
                         ),
                       ]
-                    ),
-                  ]
-                ),
-              ]
+                  ),
+                ]
             ),
             h(
-              "div",
-              {
-                class: { "modal-content": true },
-                style: { paddingLeft: "40px" },
-              },
-              [
-                h("p", {
-                  style: { marginBottom: "15px" },
-                  domProps: {
-                    innerHTML:
-                      "确定要删除该仓库吗？<br/>该操作不可逆！<br/>如果该仓库有正在进行的网络传输，可能会删除失败，请注意提示信息！",
-                  },
-                }),
-              ]
+                "div",
+                {
+                  class: { "modal-content": true },
+                  style: { paddingLeft: "40px" },
+                },
+                [
+                  h("p", {
+                    style: { marginBottom: "15px" },
+                    domProps: {
+                      innerHTML:
+                          "确定要删除该仓库吗？<br/>该操作不可逆！<br/>如果该仓库有正在进行的网络传输，可能会删除失败，请注意提示信息！",
+                    },
+                  }),
+                ]
             ),
           ]);
         },
@@ -2769,20 +2913,20 @@ export default {
             rep_name: rep_name,
           };
           that.$axios
-            .post("api.php?c=Svnrep&a=DelRep&t=web", data)
-            .then(function (response) {
-              var result = response.data;
-              if (result.status == 1) {
-                that.$Message.success(result.message);
-                that.GetRepList();
-              } else {
-                that.$Message.error({ content: result.message, duration: 2 });
-              }
-            })
-            .catch(function (error) {
-              console.log(error);
-              that.$Message.error("出错了 请联系管理员！");
-            });
+              .post("api.php?c=Svnrep&a=DelRep&t=web", data)
+              .then(function (response) {
+                var result = response.data;
+                if (result.status == 1) {
+                  that.$Message.success(result.message);
+                  that.GetRepList();
+                } else {
+                  that.$Message.error({ content: result.message, duration: 2 });
+                }
+              })
+              .catch(function (error) {
+                console.log(error);
+                that.$Message.error("出错了 请联系管理员！");
+              });
         },
       });
     },
@@ -2791,6 +2935,18 @@ export default {
 </script>
 
 <style lang="less">
+
+.ivu-table {
+  td.header-center {
+    .ivu-table-cell {
+      padding-left: 0;
+      padding-right: 0;
+      text-align: center;
+    }
+  }
+}
+
+
 .my-modal {
   // 卡片
   .ivu-card-body {

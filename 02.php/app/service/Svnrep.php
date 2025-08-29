@@ -7,13 +7,11 @@
  * @Description: QQ:1801168257
  */
 
+
 namespace app\service;
+use app\service\Logs as ServiceLogs;use app\service\Svn as ServiceSvn;use Witersen\Upload;
 
-use app\service\Svn as ServiceSvn;
-use app\service\Logs as ServiceLogs;
-use Witersen\Upload;
-
-class Svnrep extends Base
+class Svnrep extends \app\service\Base
 {
     /**
      * 服务层对象
@@ -147,7 +145,7 @@ class Svnrep extends Base
 
         //写入数据库
         $this->database->delete('svn_reps', [
-            'rep_name' =>  $repName,
+            'rep_name' => $repName,
         ]);
         $this->database->insert('svn_reps', [
             'rep_name' => $repName,
@@ -218,7 +216,7 @@ class Svnrep extends Base
                 'rep_uuid' => $this->GetRepUUID($value)
             ];
             if ($rep_size) {
-                $sql['rep_size'] = funGetDirSizeDu($this->configSvn['rep_base_path'] .  $value);
+                $sql['rep_size'] = funGetDirSizeDu($this->configSvn['rep_base_path'] . $value);
             }
             if ($rep_rev) {
                 $sql['rep_rev'] = $this->GetRepRev($value);
@@ -233,7 +231,7 @@ class Svnrep extends Base
                 'rep_uuid' => $this->GetRepUUID($value)
             ];
             if ($rep_size) {
-                $sql['rep_size'] = funGetDirSizeDu($this->configSvn['rep_base_path'] .  $value);
+                $sql['rep_size'] = funGetDirSizeDu($this->configSvn['rep_base_path'] . $value);
             }
             if ($rep_rev) {
                 $sql['rep_rev'] = $this->GetRepRev($value);
@@ -292,10 +290,10 @@ class Svnrep extends Base
 
     /**
      * 对用户有权限的仓库路径列表进行一一验证
-     * 
+     *
      * 确保该仓库的路径存在于仓库的最新版本库中
-     * 
-     * 此方式可以清理掉因为目录/文件名进行修改/删除后造成的authz文件冗余 
+     *
+     * 此方式可以清理掉因为目录/文件名进行修改/删除后造成的authz文件冗余
      * 但是此方式只能清理对此用户进行的有权限的授权 而不能清理无权限的情况
      * 以后有时间会考虑对所有的路径进行扫描和清理[todo]
      */
@@ -318,7 +316,7 @@ class Svnrep extends Base
         }
 
         foreach ($userRepList as $key => $value) {
-            $cmd = sprintf("'%s' tree  '%s' --full-paths --non-recursive '%s'", $this->configBin['svnlook'], $this->configSvn['rep_base_path'] .  $value['repName'], $value['priPath']);
+            $cmd = sprintf("'%s' tree  '%s' --full-paths --non-recursive '%s'", $this->configBin['svnlook'], $this->configSvn['rep_base_path'] . $value['repName'], $value['priPath']);
             $result = funShellExec($cmd);
 
             if (strstr($result['error'], 'svnlook: E160013:')) {
@@ -366,6 +364,7 @@ class Svnrep extends Base
         $userRepList = $this->database->select('svn_user_pri_paths', [
             'svnn_user_pri_path_id [Int]',
             'rep_name',
+            'rep_note',
             'pri_path',
             'rep_pri',
         ], [
@@ -414,7 +413,7 @@ class Svnrep extends Base
         if ($sync) {
             /**
              * 物理仓库 => authz文件
-             * 
+             *
              * 1、将物理仓库已经删除但是authz文件中依然存在的从authz文件删除
              * 2、将在物理仓库存在但是authz文件中不存在的向authz文件写入
              */
@@ -422,7 +421,7 @@ class Svnrep extends Base
 
             /**
              * 物理仓库 => svn_reps数据表
-             * 
+             *
              * 1、将物理仓库存在而没有写入数据库的记录写入数据库
              * 2、将物理仓库已经删除但是数据库依然存在的从数据库删除
              */
@@ -470,7 +469,7 @@ class Svnrep extends Base
             'rep_uuid'
         ], [
             'ORDER' => [
-                $this->payload['sortName']  => strtoupper($this->payload['sortType'])
+                $this->payload['sortName'] => strtoupper($this->payload['sortType'])
             ]
         ]);
 
@@ -522,7 +521,7 @@ class Svnrep extends Base
         if ($sync) {
             /**
              * 物理仓库 => authz文件
-             * 
+             *
              * 1、将物理仓库已经删除但是authz文件中依然存在的从authz文件删除
              * 2、将在物理仓库存在但是authz文件中不存在的向authz文件写入
              */
@@ -535,9 +534,9 @@ class Svnrep extends Base
 
             /**
              * 对用户有权限的仓库路径列表进行一一验证
-             * 
+             *
              * 确保该仓库的路径存在于仓库的最新版本库中
-             * 
+             *
              * 暂时去除 这样做可能会对已经配置的路径造成误删除 因为文件或者文件夹可能为误删除 进行此同步后就会造成整个路径误删除
              */
             // $this->SyncRepPathCheck();
@@ -549,7 +548,7 @@ class Svnrep extends Base
 
             /**
              * 用户有权限的仓库路径列表 => svn_user_pri_paths数据表
-             * 
+             *
              * 1、列表中存在的但是数据表不存在则向数据表插入
              * 2、列表中不存在的但是数据表存在从数据表删除
              */
@@ -568,19 +567,22 @@ class Svnrep extends Base
             $begin = $pageSize * ($currentPage - 1);
         }
 
+// ... existing code ...
         $list = $this->database->select('svn_user_pri_paths', [
-            'svnn_user_pri_path_id [Int]',
-            'rep_name',
-            'pri_path',
-            'rep_pri',
-            'second_pri [Int]'
+            '[>]svn_reps' => ['rep_name']
+        ], [
+            'svn_user_pri_paths.svnn_user_pri_path_id (svnn_user_pri_path_id)',
+            'svn_user_pri_paths.rep_name',
+            'svn_user_pri_paths.pri_path',
+            'svn_user_pri_paths.rep_pri',
+            'svn_user_pri_paths.second_pri (second_pri)',
+            'svn_reps.rep_note'
         ], [
             'ORDER' => [
-                'rep_name'  => strtoupper($this->payload['sortType'])
+                'svn_user_pri_paths.rep_name'  => strtoupper($this->payload['sortType'])
             ],
-            'svn_user_name' => $this->userName
+            'svn_user_pri_paths.svn_user_name' => $this->userName
         ]);
-
         //过滤
         if (!empty($searchKeyword)) {
             foreach ($list as $key => $value) {
@@ -634,7 +636,7 @@ class Svnrep extends Base
         }
 
         $this->database->update('svn_reps', [
-            'rep_size' => funGetDirSizeDu($this->configSvn['rep_base_path'] .  $this->payload['rep_name']),
+            'rep_size' => funGetDirSizeDu($this->configSvn['rep_base_path'] . $this->payload['rep_name']),
         ], [
             'rep_name' => $this->payload['rep_name']
         ]);
@@ -718,7 +720,7 @@ class Svnrep extends Base
 
         /**
          * 获取版本号等文件详细信息
-         * 
+         *
          * 此处也要针对单文件授权进行单独处理
          */
         $data = [];
@@ -727,7 +729,7 @@ class Svnrep extends Base
             $value = $isFile ? $repPath : rtrim($repPath, '/') . '/' . $value;
 
             //获取文件或者文件夹最年轻的版本号
-            $lastRev  = $this->GetRepFileRev($repName, $value);
+            $lastRev = $this->GetRepFileRev($repName, $value);
 
             //获取文件或者文件夹最年轻的版本的作者
             $lastRevAuthor = $this->GetRepFileAuthor($repName, $lastRev);
@@ -824,14 +826,14 @@ class Svnrep extends Base
 
         /**
          * 有权限的开始路径
-         * 
+         *
          * 管理员为 /
          * SVN用户为管理员设定的路径值
          */
         $path = $this->payload['path'];
 
         //获取全路径的一层目录树
-        $cmd = sprintf("'%s' tree  '%s' --full-paths --non-recursive '%s'", $this->configBin['svnlook'], $this->configSvn['rep_base_path'] .  $this->payload['rep_name'], $path);
+        $cmd = sprintf("'%s' tree  '%s' --full-paths --non-recursive '%s'", $this->configBin['svnlook'], $this->configSvn['rep_base_path'] . $this->payload['rep_name'], $path);
         $result = funShellExec($cmd);
         if ($result['code'] != 0) {
             return message(200, 0, $result['error']);
@@ -844,7 +846,7 @@ class Svnrep extends Base
         $data = [];
         foreach ($resultArray as $key => $value) {
             //获取文件或者文件夹最年轻的版本号
-            $lastRev  = $this->GetRepFileRev($this->payload['rep_name'], $value);
+            $lastRev = $this->GetRepFileRev($this->payload['rep_name'], $value);
 
             //获取文件或者文件夹最年轻的版本的作者
             $lastRevAuthor = $this->GetRepFileAuthor($this->payload['rep_name'], $lastRev);
@@ -922,9 +924,9 @@ class Svnrep extends Base
 
     /**
      * 根据目录名称获取该目录下的目录树
-     * 
+     *
      * 管理员配置目录授权用
-     * 
+     *
      */
     public function GetRepTree()
     {
@@ -947,7 +949,7 @@ class Svnrep extends Base
         }
 
         //获取全路径的一层目录树
-        $cmdSvnlookTree = sprintf("'%s' tree  '%s' --full-paths --non-recursive '%s'", $this->configBin['svnlook'], $this->configSvn['rep_base_path']  . $repName, $path);
+        $cmdSvnlookTree = sprintf("'%s' tree  '%s' --full-paths --non-recursive '%s'", $this->configBin['svnlook'], $this->configSvn['rep_base_path'] . $repName, $path);
         $result = funShellExec($cmdSvnlookTree);
         if ($result['code'] != 0) {
             return message(200, 0, $result['error']);
@@ -1676,7 +1678,7 @@ class Svnrep extends Base
         }
 
         //从仓库目录修改仓库名称
-        funShellExec('mv ' . $this->configSvn['rep_base_path'] .  $this->payload['old_rep_name'] . ' ' . $this->configSvn['rep_base_path'] . $this->payload['new_rep_name']);
+        funShellExec('mv ' . $this->configSvn['rep_base_path'] . $this->payload['old_rep_name'] . ' ' . $this->configSvn['rep_base_path'] . $this->payload['new_rep_name']);
 
         //检查修改过的仓库名称是否存在
         clearstatcache();
@@ -1737,7 +1739,7 @@ class Svnrep extends Base
         //从仓库目录删除仓库文件夹
         funShellExec('cd ' . $this->configSvn['rep_base_path'] . ' && rm -rf ./' . $this->payload['rep_name']);
         clearstatcache();
-        if (is_dir($this->configSvn['rep_base_path'] .  $this->payload['rep_name'])) {
+        if (is_dir($this->configSvn['rep_base_path'] . $this->payload['rep_name'])) {
             return message(200, 0, '删除失败');
         }
 
@@ -1785,7 +1787,7 @@ class Svnrep extends Base
             $newArray = [
                 [
                     'repKey' => 'Path',
-                    'repValue' => $this->configSvn['rep_base_path'] .  $this->payload['rep_name'],
+                    'repValue' => $this->configSvn['rep_base_path'] . $this->payload['rep_name'],
                 ],
                 [
                     'repKey' => 'UUID',
@@ -1805,9 +1807,9 @@ class Svnrep extends Base
     public function SetUUID()
     {
         if ($this->payload['uuid'] == '') {
-            $cmd = sprintf("'%s' setuuid '%s'", $this->configBin['svnadmin'], $this->configSvn['rep_base_path'] .  $this->payload['rep_name']);
+            $cmd = sprintf("'%s' setuuid '%s'", $this->configBin['svnadmin'], $this->configSvn['rep_base_path'] . $this->payload['rep_name']);
         } else {
-            $cmd = sprintf("'%s' setuuid '%s' '%s'", $this->configBin['svnadmin'], $this->configSvn['rep_base_path'] .  $this->payload['rep_name'], $this->payload['uuid']);
+            $cmd = sprintf("'%s' setuuid '%s' '%s'", $this->configBin['svnadmin'], $this->configSvn['rep_base_path'] . $this->payload['rep_name'], $this->payload['uuid']);
         }
 
         $result = funShellExec($cmd);
@@ -1828,6 +1830,21 @@ class Svnrep extends Base
     /**
      * 获取备份文件夹下的文件列表
      */
+    /*    public function GetBackupList()
+        {
+            $result = funGetDirFileList($this->configSvn['backup_base_path']);
+
+            foreach ($result as $key => $value) {
+                $result[$key]['fileToken'] = hash_hmac('md5', $value['fileName'], $this->configSign['signature']);
+                $result[$key]['fileUrl'] = sprintf('api.php?c=Svnrep&a=DownloadRepBackup&t=web&fileName=%s&token=%s', $value['fileName'], $result[$key]['fileToken']);
+            }
+
+            return message(200, 1, '成功', $result);
+        }*/
+    /**
+     * 获取备份文件夹下的文件列表
+     */
+
     public function GetBackupList()
     {
         $result = funGetDirFileList($this->configSvn['backup_base_path']);
@@ -1839,6 +1856,7 @@ class Svnrep extends Base
 
         return message(200, 1, '成功', $result);
     }
+
 
     /**
      * 立即备份当前仓库
@@ -1857,7 +1875,7 @@ class Svnrep extends Base
 
         $backupName = $this->payload['rep_name'] . '_' . date('YmdHis') . '_' . $task_unique . '.dump';
 
-        $task_cmd = sprintf("'%s' dump '%s' --quiet  > '%s'", $this->configBin['svnadmin'], $this->configSvn['rep_base_path'] .  $this->payload['rep_name'], $this->configSvn['backup_base_path'] .  $backupName);
+        $task_cmd = sprintf("'%s' dump '%s' --quiet  > '%s'", $this->configBin['svnadmin'], $this->configSvn['rep_base_path'] . $this->payload['rep_name'], $this->configSvn['backup_base_path'] . $backupName);
 
         $this->database->insert('tasks', [
             'task_name' => sprintf('仓库[%s]备份文件生成', $this->payload['rep_name']),
@@ -1903,7 +1921,7 @@ class Svnrep extends Base
             json1(200, 0, '缺少文件名');
         }
         $fileName = $_GET['fileName'];
-        $filePath = $this->configSvn['backup_base_path'] .  $fileName;
+        $filePath = $this->configSvn['backup_base_path'] . $fileName;
 
         if (empty($_GET['token'])) {
             json1(200, 0, '缺少文件token');
@@ -1914,7 +1932,7 @@ class Svnrep extends Base
             json1(200, 0, '文件token无效');
         }
 
-        if (!file_exists($this->configSvn['backup_base_path'] .  $fileName)) {
+        if (!file_exists($this->configSvn['backup_base_path'] . $fileName)) {
             json1(200, 0, '文件不存在');
         }
 
@@ -2044,7 +2062,7 @@ class Svnrep extends Base
     public function SvnadminLoad()
     {
         //检查备份文件是否存在
-        if (!file_exists($this->configSvn['backup_base_path'] .  $this->payload['fileName'])) {
+        if (!file_exists($this->configSvn['backup_base_path'] . $this->payload['fileName'])) {
             return message(200, 0, '备份文件不存在');
         }
 
@@ -2058,7 +2076,7 @@ class Svnrep extends Base
 
         $task_log_file = $this->configSvn['log_base_path'] . $task_unique . '.log';
 
-        $task_cmd = sprintf("'%s' load --quiet '%s' < '%s'", $this->configBin['svnadmin'], $this->configSvn['rep_base_path'] .  $this->payload['rep_name'], $this->configSvn['backup_base_path'] .  $this->payload['fileName'], $task_log_file);
+        $task_cmd = sprintf("'%s' load --quiet '%s' < '%s'", $this->configBin['svnadmin'], $this->configSvn['rep_base_path'] . $this->payload['rep_name'], $this->configSvn['backup_base_path'] . $this->payload['fileName'], $task_log_file);
 
         $this->database->insert('tasks', [
             'task_name' => sprintf('仓库[%s]导入备份文件[%s]', $this->payload['rep_name'], $this->payload['fileName']),
@@ -2090,56 +2108,56 @@ class Svnrep extends Base
             return message(200, 0, '仓库不存在');
         }
 
-        $repHooks =  [
-            'start_commit' =>  [
+        $repHooks = [
+            'start_commit' => [
                 'fileName' => 'start-commit',
                 'hasFile' => false,
                 'con' => '',
                 'tmpl' => ''
             ],
-            'pre_commit' =>  [
+            'pre_commit' => [
                 'fileName' => 'pre-commit',
                 'hasFile' => false,
                 'con' => '',
                 'tmpl' => ''
             ],
-            'post_commit' =>  [
+            'post_commit' => [
                 'fileName' => 'post-commit',
                 'hasFile' => false,
                 'con' => '',
                 'tmpl' => ''
             ],
-            'pre_lock' =>  [
+            'pre_lock' => [
                 'fileName' => 'pre-lock',
                 'hasFile' => false,
                 'con' => '',
                 'tmpl' => ''
             ],
-            'post_lock' =>  [
+            'post_lock' => [
                 'fileName' => 'post-lock',
                 'hasFile' => false,
                 'con' => '',
                 'tmpl' => ''
             ],
-            'pre_unlock' =>  [
+            'pre_unlock' => [
                 'fileName' => 'pre-unlock',
                 'hasFile' => false,
                 'con' => '',
                 'tmpl' => ''
             ],
-            'post_unlock' =>  [
+            'post_unlock' => [
                 'fileName' => 'post-unlock',
                 'hasFile' => false,
                 'con' => '',
                 'tmpl' => ''
             ],
-            'pre_revprop_change' =>  [
+            'pre_revprop_change' => [
                 'fileName' => 'pre-revprop-change',
                 'hasFile' => false,
                 'con' => '',
                 'tmpl' => ''
             ],
-            'post_revprop_change' =>  [
+            'post_revprop_change' => [
                 'fileName' => 'post-revprop-change',
                 'hasFile' => false,
                 'con' => '',
@@ -2300,8 +2318,8 @@ class Svnrep extends Base
         foreach ($file_arr as $file_item) {
             clearstatcache();
             if ($file_item != '.' && $file_item != '..') {
-                if (is_dir($this->configSvn['rep_base_path'] .  $file_item)) {
-                    $file_arr2 = scandir($this->configSvn['rep_base_path'] .  $file_item);
+                if (is_dir($this->configSvn['rep_base_path'] . $file_item)) {
+                    $file_arr2 = scandir($this->configSvn['rep_base_path'] . $file_item);
                     foreach ($file_arr2 as $file_item2) {
                         if (($file_item2 == 'conf' || $file_item2 == 'db' || $file_item2 == 'hooks' || $file_item2 == 'locks')) {
                             array_push($repArray, $file_item);
@@ -2326,15 +2344,15 @@ class Svnrep extends Base
     /**
      * 获取仓库的修订版本数量
      * svnadmin info
-     * 
-     * Subversion 1.9 及以前没有 svnadmin info 子指令 
+     *
+     * Subversion 1.9 及以前没有 svnadmin info 子指令
      * 因此使用 svnlook youngest 来代替
      */
     private function GetRepRev($repName)
     {
         // $cmd = sprintf("'%s' info '%s' | grep 'Revisions' | awk '{print $2}'", $this->configBin['svnadmin'], $this->configSvn['rep_base_path'] .  $repName);
 
-        $cmd = sprintf("'%s' youngest '%s'", $this->configBin['svnlook'], $this->configSvn['rep_base_path'] .  $repName);
+        $cmd = sprintf("'%s' youngest '%s'", $this->configBin['svnlook'], $this->configSvn['rep_base_path'] . $repName);
 
         $result = funShellExec($cmd);
 
@@ -2346,7 +2364,7 @@ class Svnrep extends Base
      */
     private function GetRepUUID($repName)
     {
-        $cmd = sprintf("'%s' uuid '%s'", $this->configBin['svnlook'], $this->configSvn['rep_base_path'] .  $repName);
+        $cmd = sprintf("'%s' uuid '%s'", $this->configBin['svnlook'], $this->configSvn['rep_base_path'] . $repName);
 
         $result = funShellExec($cmd);
 
@@ -2356,23 +2374,23 @@ class Svnrep extends Base
     /**
      * 获取仓库的属性内容（key-value的形式）
      * svnadmin info
-     * 
-     * Subversion 1.9 及以前没有 svnadmin info 子指令 
+     *
+     * Subversion 1.9 及以前没有 svnadmin info 子指令
      */
     private function GetRepDetail110($repName)
     {
-        $cmd = sprintf("'%s' info '%s'", $this->configBin['svnadmin'], $this->configSvn['rep_base_path'] .  $repName);
+        $cmd = sprintf("'%s' info '%s'", $this->configBin['svnadmin'], $this->configSvn['rep_base_path'] . $repName);
         $result = funShellExec($cmd);
         return $result;
     }
 
     /**
      * 获取仓库下某个文件的体积
-     * 
+     *
      * 目前为默认最新版本
-     * 
+     *
      * 根据体积大小自动调整单位
-     * 
+     *
      * svnlook file
      */
     private function GetRepRevFileSize($repName, $filePath)
@@ -2385,14 +2403,14 @@ class Svnrep extends Base
 
     /**
      * 获取仓库下指定文件或者文件夹的最高修订版本
-     * 
+     *
      * svnlook history
-     * 
+     *
      * 是否有必要做错误捕获 todo
      */
     private function GetRepFileRev($repName, $filePath)
     {
-        $cmd = sprintf("'%s' history --limit 1 '%s' '%s'", $this->configBin['svnlook'], $this->configSvn['rep_base_path'] .  $repName, $filePath);
+        $cmd = sprintf("'%s' history --limit 1 '%s' '%s'", $this->configBin['svnlook'], $this->configSvn['rep_base_path'] . $repName, $filePath);
         $result = funShellExec($cmd);
         $result = $result['result'];
         $resultArray = explode("\n", $result);
@@ -2403,42 +2421,42 @@ class Svnrep extends Base
 
     /**
      * 获取仓库下指定文件或者文件夹的作者
-     * 
+     *
      * svnlook author
-     * 
+     *
      * 是否有必要做错误捕获 todo
      */
     private function GetRepFileAuthor($repName, $rev)
     {
-        $cmd = sprintf("'%s' author -r %s '%s'", $this->configBin['svnlook'], $rev, $this->configSvn['rep_base_path'] .  $repName);
+        $cmd = sprintf("'%s' author -r %s '%s'", $this->configBin['svnlook'], $rev, $this->configSvn['rep_base_path'] . $repName);
         $result = funShellExec($cmd);
         return $result['result'];
     }
 
     /**
      * 获取仓库下指定文件或者文件夹的提交日期
-     * 
+     *
      * svnlook date
-     * 
+     *
      * 是否有必要做错误捕获 todo
      */
     private function GetRepFileDate($repName, $rev)
     {
-        $cmd = sprintf("'%s' date -r %s '%s'", $this->configBin['svnlook'], $rev, $this->configSvn['rep_base_path'] .  $repName);
+        $cmd = sprintf("'%s' date -r %s '%s'", $this->configBin['svnlook'], $rev, $this->configSvn['rep_base_path'] . $repName);
         $result = funShellExec($cmd);
         return $result['result'];
     }
 
     /**
      * 获取仓库下指定文件或者文件夹的提交日志
-     * 
+     *
      * svnlook log
-     * 
+     *
      * 是否有必要做错误捕获 todo
      */
     private function GetRepFileLog($repName, $rev)
     {
-        $cmd = sprintf("'%s' log -r %s '%s'", $this->configBin['svnlook'], $rev, $this->configSvn['rep_base_path'] .  $repName);
+        $cmd = sprintf("'%s' log -r %s '%s'", $this->configBin['svnlook'], $rev, $this->configSvn['rep_base_path'] . $repName);
         $result = funShellExec($cmd);
         return $result['result'];
     }
