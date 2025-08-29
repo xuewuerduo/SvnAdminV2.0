@@ -5,18 +5,18 @@
 <template>
   <div class="login">
     <div class="login-con">
-      <Card icon="log-in" title="SVNAdmin V2.5.10" :bordered="false">
+      <Card icon="log-in" title="" :bordered="false">
         <div class="form-con">
           <Form
-            ref="formUserLogin"
-            :model="formUserLogin"
-            :rules="ruleValidateLogin"
-            @keydown.enter.native="Submit('formUserLogin')"
+              ref="formUserLogin"
+              :model="formUserLogin"
+              :rules="ruleValidateLogin"
+              @keydown.enter.native="Submit('formUserLogin')"
           >
             <FormItem prop="user_name">
               <Input
-                v-model="formUserLogin.user_name"
-                placeholder="请输入用户名"
+                  v-model="formUserLogin.user_name"
+                  placeholder="请输入用户名"
               >
                 <span slot="prepend">
                   <Icon :size="16" type="ios-person"></Icon>
@@ -25,10 +25,10 @@
             </FormItem>
             <FormItem prop="user_pass">
               <Input
-                type="password"
-                password
-                v-model="formUserLogin.user_pass"
-                placeholder="请输入密码"
+                  type="password"
+                  password
+                  v-model="formUserLogin.user_pass"
+                  placeholder="请输入密码"
               >
                 <span slot="prepend">
                   <Icon :size="14" type="md-lock"></Icon>
@@ -37,9 +37,9 @@
             </FormItem>
             <FormItem>
               <Select
-                v-model="formUserLogin.user_role"
-                :transfer="true"
-                @on-change="ChangeSelect"
+                  v-model="formUserLogin.user_role"
+                  :transfer="true"
+                  @on-change="ChangeSelect"
               >
                 <Option value="1">管理人员</Option>
                 <Option value="3">子管理员</Option>
@@ -49,29 +49,29 @@
             <FormItem prop="code" v-if="verifyOption">
               <Row>
                 <Col span="11"
-                  ><Input
+                ><Input
                     v-model="formUserLogin.code"
                     placeholder="请输入验证码"
-                  ></Input
+                ></Input
                 ></Col>
                 <Col span="1"></Col>
                 <Col span="12">
                   <img
-                    @click="GetVerifyCode"
-                    :src="formUserLogin.base64"
-                    :alt="loadingGetVerifyCode"
-                    style="width: 100%; cursor: pointer"
+                      @click="GetVerifyCode"
+                      :src="formUserLogin.base64"
+                      :alt="loadingGetVerifyCode"
+                      style="width: 100%; cursor: pointer"
                   />
                 </Col>
               </Row>
             </FormItem>
             <FormItem>
               <Button
-                type="primary"
-                long
-                @click="Submit('formUserLogin')"
-                :loading="loadingLogin"
-                >登录</Button
+                  type="primary"
+                  long
+                  @click="Submit('formUserLogin')"
+                  :loading="loadingLogin"
+              >登录</Button
               >
             </FormItem>
           </Form>
@@ -130,8 +130,8 @@ export default {
     var that = this;
     //还原下拉
     that.formUserLogin.user_role = localStorage.user_role
-      ? localStorage.user_role
-      : "2";
+        ? localStorage.user_role
+        : "2";
     if (sessionStorage.token) {
       that.$Message.success("已有登录信息 自动跳转中...");
       setTimeout(function () {
@@ -163,24 +163,24 @@ export default {
       var that = this;
       var data = {};
       that.$axios
-        .post("api.php?c=Setting&a=GetVerifyOption&t=web", data)
-        .then(function (response) {
-          var result = response.data;
-          if (result.status == 1) {
-            if (result.data.enable == true) {
-              that.verifyOption = true;
-              that.GetVerifyCode();
+          .post("api.php?c=Setting&a=GetVerifyOption&t=web", data)
+          .then(function (response) {
+            var result = response.data;
+            if (result.status == 1) {
+              if (result.data.enable == true) {
+                that.verifyOption = true;
+                that.GetVerifyCode();
+              } else {
+                that.verifyOption = false;
+              }
             } else {
-              that.verifyOption = false;
+              that.$Message.error({ content: result.message, duration: 2 });
             }
-          } else {
-            that.$Message.error({ content: result.message, duration: 2 });
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-          that.$Message.error("出错了 请联系管理员！");
-        });
+          })
+          .catch(function (error) {
+            console.log(error);
+            that.$Message.error("出错了 请联系管理员！");
+          });
     },
     /**
      * 请求验证码
@@ -191,20 +191,20 @@ export default {
       that.loadingGetVerifyCode = "loading......";
       var data = {};
       that.$axios
-        .post("api.php?c=Common&a=GetVerifyCode&t=web", data)
-        .then(function (response) {
-          var result = response.data;
-          if (result.status == 1) {
-            that.formUserLogin.uuid = result.data.uuid;
-            that.formUserLogin.base64 = result.data.base64;
-          } else {
-            that.$Message.error({ content: result.message, duration: 2 });
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-          that.$Message.error("出错了 请联系管理员！");
-        });
+          .post("api.php?c=Common&a=GetVerifyCode&t=web", data)
+          .then(function (response) {
+            var result = response.data;
+            if (result.status == 1) {
+              that.formUserLogin.uuid = result.data.uuid;
+              that.formUserLogin.base64 = result.data.base64;
+            } else {
+              that.$Message.error({ content: result.message, duration: 2 });
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+            that.$Message.error("出错了 请联系管理员！");
+          });
     },
     //登录
     Login() {
@@ -218,51 +218,51 @@ export default {
         code: that.formUserLogin.code,
       };
       that.$axios
-        .post("api.php?c=Common&a=Login&t=web", data)
-        .then(function (response) {
-          that.loadingLogin = false;
-          var result = response.data;
-          if (result.status == 1) {
-            //存储
-            sessionStorage.setItem("token", result.data.token);
-            sessionStorage.setItem("user_name", result.data.user_name);
-            sessionStorage.setItem("user_role_id", result.data.user_role_id);
-            sessionStorage.setItem(
-              "user_role_name",
-              result.data.user_role_name
-            );
-            sessionStorage.setItem("route", JSON.stringify(result.data.route));
-            sessionStorage.setItem(
-              "functions",
-              JSON.stringify(result.data.functions)
-            );
-
-            that.$Message.success(result.message);
-
-            if (result.data.user_role_id == 1) {
-              //管理员跳转到首页
-              sessionStorage.setItem("firstRoute", "index");
-            } else if (result.data.user_role_id == 2) {
-              //用户跳转到仓库页
-              sessionStorage.setItem("firstRoute", "repositoryInfo");
-            } else if (result.data.user_role_id == 3) {
-              //子管理员跳转到有权限的首个页面
+          .post("api.php?c=Common&a=Login&t=web", data)
+          .then(function (response) {
+            that.loadingLogin = false;
+            var result = response.data;
+            if (result.status == 1) {
+              //存储
+              sessionStorage.setItem("token", result.data.token);
+              sessionStorage.setItem("user_name", result.data.user_name);
+              sessionStorage.setItem("user_role_id", result.data.user_role_id);
               sessionStorage.setItem(
-                "firstRoute",
-                result.data.route.children[0].name
+                  "user_role_name",
+                  result.data.user_role_name
               );
+              sessionStorage.setItem("route", JSON.stringify(result.data.route));
+              sessionStorage.setItem(
+                  "functions",
+                  JSON.stringify(result.data.functions)
+              );
+
+              that.$Message.success(result.message);
+
+              if (result.data.user_role_id == 1) {
+                //管理员跳转到首页
+                sessionStorage.setItem("firstRoute", "index");
+              } else if (result.data.user_role_id == 2) {
+                //用户跳转到仓库页
+                sessionStorage.setItem("firstRoute", "repositoryInfo");
+              } else if (result.data.user_role_id == 3) {
+                //子管理员跳转到有权限的首个页面
+                sessionStorage.setItem(
+                    "firstRoute",
+                    result.data.route.children[0].name
+                );
+              }
+              that.$router.push({ name: sessionStorage.firstRoute });
+            } else {
+              that.GetVerifyOption();
+              that.$Message.error({ content: result.message, duration: 2 });
             }
-            that.$router.push({ name: sessionStorage.firstRoute });
-          } else {
-            that.GetVerifyOption();
-            that.$Message.error({ content: result.message, duration: 2 });
-          }
-        })
-        .catch(function (error) {
-          that.loadingLogin = false;
-          console.log(error);
-          that.$Message.error("出错了 请联系管理员！");
-        });
+          })
+          .catch(function (error) {
+            that.loadingLogin = false;
+            console.log(error);
+            that.$Message.error("出错了 请联系管理员！");
+          });
     },
   },
 };
